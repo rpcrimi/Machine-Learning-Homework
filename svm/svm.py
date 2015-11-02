@@ -25,7 +25,9 @@ def weight_vector(x, y, alpha):
     """
 
     w = zeros(len(x[0]))
-    # TODO: IMPLEMENT THIS FUNCTION
+    for j in range(len(x[0])):
+        for i in range(len(x[:,0])):
+            w[j] += alpha[i]*y[i]*x[i,j]
     return w
 
 
@@ -36,7 +38,9 @@ def find_support(x, y, w, b, tolerance=0.001):
     """
 
     support = set()
-    # TODO: IMPLEMENT THIS FUNCTION
+    for i in range(len(y)):
+        if abs(y[i] * (sum(x[i,:]*w) + b) - 1) < tolerance:
+            support.add(i)
     return support
 
 
@@ -47,5 +51,7 @@ def find_slack(x, y, w, b):
     """
 
     slack = set()
-    # TODO: IMPLEMENT THIS FUNCTION
+    for i in range(len(y)):
+        if y[i] * (sum(x[i,:]*w) + b) < 0:
+            slack.add(i)
     return slack

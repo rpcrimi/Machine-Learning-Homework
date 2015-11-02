@@ -1,4 +1,4 @@
-from math import pi, sin
+from math import pi, sin, log
 
 kSIMPLE_TRAIN = [(1, False), (2, True), (4, False), (5, True), (13, False),
                  (14, True), (19, False)]
@@ -62,6 +62,11 @@ def train_sin_classifier(data):
 
     # TODO: Compute a frequency that will correctly classify the dataset
     frequency = 1.0
+    sumation  = 0.0
+    for point in data:
+        if point[1] == False:
+            sumation += (10 ** (point[0]*log(2)/log(10)))
+    frequency += sumation
     return SinClassifier(frequency * pi)
 
 if __name__ == "__main__":

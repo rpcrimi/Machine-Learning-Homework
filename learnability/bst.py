@@ -54,14 +54,20 @@ Has a left child, right child, and key value, and stores its subtree size.
         Yield all keys between low and high (inclusive)
         """
 
-        if self.key > low and self.left:
+        if self.key[0] > low and self.left:
             for ii in self.left.range(low, high):
                 yield ii
-        if self.key >= low and self.key <= high:
+        if self.key[0] >= low and self.key[0] <= high:
             yield self
-        if self.key < high and self.right:
+            if self.left:
+                for ii in self.left.range(self.key[0], self.key[0]):
+                    yield ii
+            if self.right:
+                for ii in self.right.range(self.key[0],self.key[0]):
+                    yield ii
+        if self.key[0] < high and self.right:
             for ii in self.right.range(low, high):
-                yield ii
+                yield ii          
 
     def rank(self, t):
         """Return the number of keys <= t in the subtree rooted at this node."""
@@ -239,19 +245,19 @@ def test(args=None, BSTtype=BST):
               sys.argv[0]
         sys.exit()
     elif len(args) == 1:
-        items = (random.randrange(100) for i in xrange(int(args[0])))
+        items = [(1,1), (2,2), (3,0), (4,2)]
+        #items = (random.randrange(100) for i in xrange(int(args[0])))
     else:
         items = [int(i) for i in args]
 
     tree = BSTtype()
-    print tree
     for item in items:
         tree.insert(item)
         print
         print tree
 
     print("Range 25-75")
-    print("\t%s" % " ".join(str(x.key) for x in tree.range(25, 75)))
+    print("\t%s" % " ".join(str(x.key) for x in tree.range(1, 3)))
 
 
 if __name__ == '__main__': test()

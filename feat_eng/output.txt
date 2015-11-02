@@ -1,0 +1,9 @@
+Label set: ['False', 'True']
+(14784, 14784)
+set([0, 1])
+Pos: B:discovered B:death B:First B:Then, B:She's B:tear B:Olivia B:Rick B:Gambit B:finale B:witness B:dies B:Bad B:Destiny B:caught B:shoots B:Moriarty B:Regina B:kills B:Morgana
+Neg: B:Tim B:nice B:Drew B:town B:Much B:frequently B:round B:episodes, B:exchange B:air B:Cody B:style B:Bruce B:often B:says, B:wearing B:pilot B:party B:"What B:Al
+Accuracy: 0.934118
+True	False
+6382	606
+368	7428
