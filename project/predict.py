@@ -46,13 +46,13 @@ def calculate_score(plays, team1, team2):
     t1Score = 0
     t2Score = 0
     for play in plays:
-        touchDownFlag = 0
+        TDFlag = 0
         puntTDFlag = 0
         if play["IsTouchdown"] == '1':
             splitDescription = play["Description"].split(". ")             
             for i in range(len(splitDescription)):
                 if "TOUCHDOWN" in splitDescription[i]:
-                    touchDownFlag = 1
+                    TDFlag = 1
                     if "PUNT" not in splitDescription[i]:
                         if play["OffenseTeam"] == team1:
                             t1Score += 6
@@ -66,7 +66,7 @@ def calculate_score(plays, team1, team2):
                             t1Score += 6
 
                 elif "WAS REVERSED" in splitDescription[i]:
-                    if touchDownFlag:
+                    if TDFlag:
                         if not puntTDFlag:
                             if play["OffenseTeam"] == team1:
                                 t1Score -= 6
@@ -76,7 +76,22 @@ def calculate_score(plays, team1, team2):
                             if play["OffenseTeam"] == team1:
                                 t2Score -= 6
                             else:
-                                t1Score -= 6                                
+                                t1Score -= 6 
+                elif play["IsPenalty"] == '1' and TDFlag and not puntTDFlag:
+                    if play["PenaltyTeam"] == play["OffenseTeam"] and play["IsPenaltyAccepted"] == '1':
+                        if play["OffenseTeam"] == team1:
+                            t1Score -= 6
+                        else:
+                            t2Score -= 6
+
+                elif play["IsPenalty"] == '1' and TDFlag and puntTDFlag:
+                    if play["PenaltyTeam"] == play["DefenseTeam"] and paly["IsPenaltyAccepted"] == '1':
+                        if play["DefenseTeam"] == team1:
+                            t1Score -= 6
+                        else:
+                            t2Score -= 6
+
+
 
         elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"]:            
             if play["OffenseTeam"] == team1:
@@ -98,26 +113,32 @@ def calculate_score(plays, team1, team2):
 
 
 def main():
-    games = []
-    for team in teams.keys():
-        for play in data:
-            if play["OffenseTeam"] == team and (play["GameId"], play["OffenseTeam"], play["DefenseTeam"], play["GameDate"]) not in games:
-                games.append((play["GameId"], play["OffenseTeam"], play["DefenseTeam"], play["GameDate"]))
+    games = {}
+    numGames = 0
+    numGamesWrong = 0
 
-    for game in games:
-        plays = extract_data({"GameId": game[0]}, "AND")
+    for play in data:
+        if play["GameId"] not in games and play["OffenseTeam"] != '':
+            games[play["GameId"]] = [play["OffenseTeam"], play["DefenseTeam"], play["GameDate"]]
+
+    for game in games.keys():
+        plays = extract_data({"GameId": game}, "AND")
     
-        score = calculate_score(plays, game[1], game[2])
+        score = calculate_score(plays, games[game][0], games[game][1])
 
-        for result in resultsData:
-            if result["kickoff"].split("T")[0] == game[3]:
-                if result["home_team"] == game[1]:
-                    actualScore = (int(result["home_score"]), int(result["visitors_score"]))
-                else:
-                    actualScore = (int(result["visitors_score"]), int(result["home_score"]))
+        for play in data:
+            if play["GameId"] == game:
+                actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
+                if play["HomeTeam"] != games[game][0]:
+                    score = (score[1], score[0])
+                break
 
+        numGames += 1
         if actualScore != score:
-            print "%s vs %s predicted score: %s actual score: %s" % (game[1], game[2], str(score), str(actualScore))
+            numGamesWrong += 1
+            print "%s vs %s \tpredicted score: %s \tactual score: %s" % (games[game][0], games[game][1], str(score), str(actualScore))
+
+    print "Num Game: %d Num Wrong: %d" % (numGames, numGamesWrong)
 
 if __name__ == "__main__":
 	main()
