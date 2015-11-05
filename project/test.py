@@ -7,5 +7,6 @@ import pprint
 data = list(DictReader(open("pbp-2014.csv", 'r')))
 
 for play in data:
-	if "SAFETY" in play["Description"]:
+	if play["OffenseTeam"] == "BUF" and play["DefenseTeam"] == "MIA" and play["HomeTeamFinalScore"] == '29':
 		pprint.pprint(play)
+		break

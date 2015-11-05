@@ -42,101 +42,169 @@ def extract_data(matches, andor):
                 d.append(play)
     return d
 
-def calculate_score(plays, team1, team2):
-    t1Score = 0
-    t2Score = 0
+def calculate_score(plays, homeTeam, visitingTeam):
+    homeScore = 0
+    visitingScore = 0
     for play in plays:
-        TDFlag = 0
-        puntTDFlag = 0
+        offTDFlag = 0
+        defTDFlag = 0
+        extraPointFlag = 0
+        twoPointConversionFlag = 0
+        fieldGoalFlag = 0
+        safetyFlag = 0
         if play["IsTouchdown"] == '1':
-            splitDescription = play["Description"].split(". ")             
-            for i in range(len(splitDescription)):
-                if "TOUCHDOWN" in splitDescription[i]:
-                    TDFlag = 1
-                    if "PUNT" not in splitDescription[i]:
-                        if play["OffenseTeam"] == team1:
-                            t1Score += 6
-                        else:
-                            t2Score += 6
-                    else:
-                        puntTDFlag = 1
-                        if play["OffenseTeam"] == team1:
-                            t2Score += 6
-                        else:
-                            t1Score += 6
 
-                elif "WAS REVERSED" in splitDescription[i]:
-                    if TDFlag:
-                        if not puntTDFlag:
-                            if play["OffenseTeam"] == team1:
-                                t1Score -= 6
-                            else:
-                                t2Score -= 6
-                        else:
-                            if play["OffenseTeam"] == team1:
-                                t2Score -= 6
-                            else:
-                                t1Score -= 6 
-                elif play["IsPenalty"] == '1' and TDFlag and not puntTDFlag:
-                    if play["PenaltyTeam"] == play["OffenseTeam"] and play["IsPenaltyAccepted"] == '1':
-                        if play["OffenseTeam"] == team1:
-                            t1Score -= 6
-                        else:
-                            t2Score -= 6
+            if "INTERCEPTED" in play["Description"] or "PUNT" in play["Description"] or "FUMBLE" in play["Description"] or "KICKS" in play["Description"]:
+                addScore = 7
+                splitDescription = play["Description"].split(". ")
+                for desc in splitDescription:
+                    if "INTERCEPTED" in desc or "PUNT" in desc or "FUMBLE" in desc or "KICKS" in desc:
+                        if "KICKS" in desc:
+                            addScore = 6
+                        defTDFlag = 1
+                        if play["DefenseTeam"] == homeTeam:
+                            homeScore += addScore
+                        elif play["DefenseTeam"] == visitingTeam:
+                            visitingScore += addScore
+                    elif "WAS REVERSED" in desc and defTDFlag:
+                        if play["DefenseTeam"] == homeTeam:
+                            homeScore -= addScore
+                        elif play["DefenseTeam"] == visitingTeam:
+                            visitingScore -= addScore
+                        defTDFlag = 0
 
-                elif play["IsPenalty"] == '1' and TDFlag and puntTDFlag:
-                    if play["PenaltyTeam"] == play["DefenseTeam"] and paly["IsPenaltyAccepted"] == '1':
-                        if play["DefenseTeam"] == team1:
-                            t1Score -= 6
-                        else:
-                            t2Score -= 6
+                if int(play["IsPenalty"]) and defTDFlag:
+                    if play["PenaltyTeam"] == play["DefenseTeam"] and play["IsPenaltyAccepted"] == '1' and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
+                        if play["DefenseTeam"] == homeTeam:
+                            homeScore -= addScore
+                        elif play["DefenseTeam"] == visitingTeam:
+                            visitingScore -= addScore
 
-
-
-        elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"]:            
-            if play["OffenseTeam"] == team1:
-                t1Score += 1
             else:
-                t2Score += 1
-        elif play["PlayType"] == "FIELD GOAL" and "IS GOOD" in play["Description"]:
-            if play["OffenseTeam"] == team1:
-                t1Score += 3
-            else:
-                t2Score += 3
-        elif play["IsTwoPointConversionSuccessful"] == "1":
-            if play["OffenseTeam"] == team1:
-                t1Score += 2
-            else:
-                t2Score += 2
+                addScore = 6
+                splitDescription = play["Description"].split(". ")             
+                for desc in splitDescription:
+                    if "TOUCHDOWN" in desc:
+                        offTDFlag = 1
 
-    return (t1Score, t2Score)
+                        if play["OffenseTeam"] == homeTeam:
+                            homeScore += addScore
+                        elif play["OffenseTeam"] == visitingTeam:
+                            visitingScore += addScore
+
+                    elif "WAS REVERSED" in desc:
+                        if offTDFlag:
+                            if play["OffenseTeam"] == homeTeam:
+                                homeScore -= addScore
+                            elif play["OffenseTeam"] == visitingTeam:
+                                visitingScore -= addScore
+                            offTDFlag = 0
+
+                if int(play["IsPenalty"]) and offTDFlag:
+                    if play["PenaltyTeam"] == play["OffenseTeam"] and play["IsPenaltyAccepted"] == '1' and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
+                        if play["OffenseTeam"] == homeTeam:
+                            homeScore -= addScore
+                        elif play["OffenseTeam"] == visitingTeam:
+                            visitingScore -= addScore
+                        offTDFlag = 0  
+
+        elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"] and play["IsNoPlay"] != '1':
+            if play["OffenseTeam"] == homeTeam:
+                homeScore += 1
+            elif play["OffenseTeam"] == visitingTeam:
+                visitingScore += 1
+            if play["IsPenaltyAccepted"] == '1' and play["OffenseTeam"] == play["PenaltyTeam"] and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
+                if play["OffenseTeam"] == homeTeam:
+                    homeScore -= 1
+                elif play["OffenseTeam"] == visitingTeam:
+                    visitingScore -= 1  
+
+        elif play["PlayType"] == "FIELD GOAL" and "IS GOOD" in play["Description"] and play["IsNoPlay"] != '1':
+            if play["OffenseTeam"] == homeTeam:
+                homeScore += 3
+            elif play["OffenseTeam"] == visitingTeam:
+                visitingScore += 3
+            if play["IsPenaltyAccepted"] == '1' and play["OffenseTeam"] == play["PenaltyTeam"] and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
+                if play["OffenseTeam"] == homeTeam:
+                    homeScore -= 3
+                elif play["OffenseTeam"] == visitingTeam:
+                    visitingScore -= 3 
+
+        elif play["IsTwoPointConversion"] == "1":
+            splitDescription = play["Description"].split(". ")
+            for desc in splitDescription:
+                if "ATTEMPT SUCCEEDS" in desc:
+                    twoPointConversionFlag = 1
+                    if play["OffenseTeam"] == homeTeam:
+                        homeScore += 2
+                    elif play["OffenseTeam"] == visitingTeam:
+                        visitingScore += 2
+                elif "WAS REVERSED" in desc and twoPointConversionFlag:
+                    if play["OffenseTeam"] == homeTeam:
+                        homeScore += 2
+                    elif play["OffenseTeam"] == visitingTeam:
+                        visitingScore += 2
+                    twoPointConversionFlag = 0                    
+
+            if play["IsPenaltyAccepted"] == '1' and play["OffenseTeam"] == play["PenaltyTeam"] and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
+                if play["OffenseTeam"] == homeTeam:
+                    homeScore -= 2
+                elif play["OffenseTeam"] == visitingTeam:
+                    visitingScore -= 2
+
+        elif "SAFETY" in play["Description"]:
+            splitDescription = play["Description"].split(". ")
+            for desc in splitDescription:
+                if "SAFETY" in desc:
+                    safetyFlag = 1
+                    if play["DefenseTeam"] == homeTeam:
+                        homeScore += 2
+                    elif play["DefenseTeam"] == visitingTeam:
+                        visitingScore += 2                   
+
+                elif "WAS REVERSED" in desc and safetyFlag:
+                    if play["DefenseTeam"] == homeTeam:
+                        homeScore -= 2
+                    elif play["DefenseTeam"] == visitingTeam:
+                        visitingScore -= 2
+                    safetyFlag = 0
+
+            if play["IsPenaltyAccepted"] == '1' and play["PenaltyTeam"] == play["DefenseTeam"] and safetyFlag and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
+                if play["DefenseTeam"] == homeTeam:
+                    homeScore -= 2
+                elif play["DefenseTeam"] == visitingTeam:
+                    visitingScore -= 2         
+
+    return (homeScore, visitingScore)
 
 
 def main():
-    games = {}
+    games = []
     numGames = 0
     numGamesWrong = 0
 
     for play in data:
-        if play["GameId"] not in games and play["OffenseTeam"] != '':
-            games[play["GameId"]] = [play["OffenseTeam"], play["DefenseTeam"], play["GameDate"]]
+        idExists = 0
+        for game in games:
+            if play["GameId"] in game[0]:
+                idExists = 1
+                break
+        if idExists == 0:
+            games.append([play["GameId"], play["HomeTeam"], play["VisitingTeam"]])
 
-    for game in games.keys():
-        plays = extract_data({"GameId": game}, "AND")
-    
-        score = calculate_score(plays, games[game][0], games[game][1])
+    for game in games:
+        plays = extract_data({"GameId": game[0]}, "AND")
+        score = calculate_score(plays, game[1], game[2])
 
         for play in data:
-            if play["GameId"] == game:
+            if play["GameId"] == game[0]:
                 actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
-                if play["HomeTeam"] != games[game][0]:
-                    score = (score[1], score[0])
                 break
 
         numGames += 1
         if actualScore != score:
             numGamesWrong += 1
-            print "%s vs %s \tpredicted score: %s \tactual score: %s" % (games[game][0], games[game][1], str(score), str(actualScore))
+            print "%s vs %s \tpredicted score: %s \tactual score: %s" % (game[1], game[2], str(score), str(actualScore))
 
     print "Num Game: %d Num Wrong: %d" % (numGames, numGamesWrong)
 
