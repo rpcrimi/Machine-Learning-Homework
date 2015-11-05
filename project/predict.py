@@ -9,13 +9,13 @@ resultsData = list(DictReader(open("results2014.csv", 'r')))
 
 downs = [(str(d), str(t)) for d in range(1, 5) for t in range(1, 11)]
 
-teams = {'BUF': 'Bills',      'BAL': 'Ravens',   'ATL': 'Falcons',  'SEA': 'Seahawks', 
-         'GB':  'Packers',    'NO':  'Saints',   'CIN': 'Bengals',  'CHI': 'Bears', 
-         'WAS': 'Redskins',   'HOU': 'Texans',   'KC':  'Chiefs',   'TEN': 'Titans',   
-         'MIA': 'Dolphins',   'NE':  'Patriots', 'OAK': 'Raiders',  'NYJ': 'Jets', 
-         'PHI': 'Eagles',     'JAC': 'Jaguars',  'CLE': 'Browns',   'PIT': 'Steelers', 
-         'STL': 'Rams',       'MIN': 'Vikings',  'SF':  '49ers',    'DAL': 'Cowboys', 
-         'TB':  'Buccaneers', 'CAR': 'Panthers', 'DEN': 'Broncos',  'IND': 'Colts',    
+teams = {'BUF': 'Bills',      'BAL': 'Ravens',   'ATL': 'Falcons',  'SEA': 'Seahawks',
+         'GB':  'Packers',    'NO':  'Saints',   'CIN': 'Bengals',  'CHI': 'Bears',
+         'WAS': 'Redskins',   'HOU': 'Texans',   'KC':  'Chiefs',   'TEN': 'Titans',
+         'MIA': 'Dolphins',   'NE':  'Patriots', 'OAK': 'Raiders',  'NYJ': 'Jets',
+         'PHI': 'Eagles',     'JAC': 'Jaguars',  'CLE': 'Browns',   'PIT': 'Steelers',
+         'STL': 'Rams',       'MIN': 'Vikings',  'SF':  '49ers',    'DAL': 'Cowboys',
+         'TB':  'Buccaneers', 'CAR': 'Panthers', 'DEN': 'Broncos',  'IND': 'Colts',
          'NYG': 'Giants',     'DET': 'Lions',    'SD':  'Chargers', 'ARI': 'Cardinals'}
 
 
@@ -49,7 +49,7 @@ def calculate_score(plays, team1, team2):
         TDFlag = 0
         puntTDFlag = 0
         if play["IsTouchdown"] == '1':
-            splitDescription = play["Description"].split(". ")             
+            splitDescription = play["Description"].split(". ")
             for i in range(len(splitDescription)):
                 if "TOUCHDOWN" in splitDescription[i]:
                     TDFlag = 1
@@ -76,7 +76,7 @@ def calculate_score(plays, team1, team2):
                             if play["OffenseTeam"] == team1:
                                 t2Score -= 6
                             else:
-                                t1Score -= 6 
+                                t1Score -= 6
                 elif play["IsPenalty"] == '1' and TDFlag and not puntTDFlag:
                     if play["PenaltyTeam"] == play["OffenseTeam"] and play["IsPenaltyAccepted"] == '1':
                         if play["OffenseTeam"] == team1:
@@ -93,7 +93,7 @@ def calculate_score(plays, team1, team2):
 
 
 
-        elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"]:            
+        elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"]:
             if play["OffenseTeam"] == team1:
                 t1Score += 1
             else:
@@ -109,7 +109,9 @@ def calculate_score(plays, team1, team2):
             else:
                 t2Score += 2
 
-    return (t1Score, t2Score)
+        scoreDiff = t1Score - t2Score
+
+    return (t1Score, t2Score), scoreDiff
 
 
 def main():
@@ -123,18 +125,19 @@ def main():
 
     for game in games.keys():
         plays = extract_data({"GameId": game}, "AND")
-    
-        score = calculate_score(plays, games[game][0], games[game][1])
+
+        score, scoreDiff = calculate_score(plays, games[game][0], games[game][1])
 
         for play in data:
             if play["GameId"] == game:
                 actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
+                actualScoreDiff = int(play["HomeTeamFinalScore"]) - int(play["VisitingTeamFinalScore"])
                 if play["HomeTeam"] != games[game][0]:
-                    score = (score[1], score[0])
+                    score, scoreDiff = (score[1], score[0]), score[1]-score[0]
                 break
 
         numGames += 1
-        if actualScore != score:
+        if actualScoreDiff != scoreDiff:
             numGamesWrong += 1
             print "%s vs %s \tpredicted score: %s \tactual score: %s" % (games[game][0], games[game][1], str(score), str(actualScore))
 
