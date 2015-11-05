@@ -64,7 +64,7 @@ for gameID in gameIDs:
 						vPassAttempts += 1.0
 						vPassYards += float(play["Yards"])
 						vAveragePass = vPassYards/vPassAttempts
-			else:
+			elif play["IsInterception"] != '1':
 				if play["OffenseTeam"] == play["HomeTeam"]:
 					hPassAttempts += 1.0
 					hPassYards += float(play["Yards"])
