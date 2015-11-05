@@ -53,71 +53,6 @@ def calculate_score(plays, homeTeam, visitingTeam):
         fieldGoalFlag = 0
         safetyFlag = 0
         if play["IsTouchdown"] == '1':
-<<<<<<< HEAD
-            splitDescription = play["Description"].split(". ")
-            for i in range(len(splitDescription)):
-                if "TOUCHDOWN" in splitDescription[i]:
-                    TDFlag = 1
-                    if "PUNT" not in splitDescription[i]:
-                        if play["OffenseTeam"] == team1:
-                            t1Score += 6
-                        else:
-                            t2Score += 6
-                    else:
-                        puntTDFlag = 1
-                        if play["OffenseTeam"] == team1:
-                            t2Score += 6
-                        else:
-                            t1Score += 6
-
-                elif "WAS REVERSED" in splitDescription[i]:
-                    if TDFlag:
-                        if not puntTDFlag:
-                            if play["OffenseTeam"] == team1:
-                                t1Score -= 6
-                            else:
-                                t2Score -= 6
-                        else:
-                            if play["OffenseTeam"] == team1:
-                                t2Score -= 6
-                            else:
-                                t1Score -= 6
-                elif play["IsPenalty"] == '1' and TDFlag and not puntTDFlag:
-                    if play["PenaltyTeam"] == play["OffenseTeam"] and play["IsPenaltyAccepted"] == '1':
-                        if play["OffenseTeam"] == team1:
-                            t1Score -= 6
-                        else:
-                            t2Score -= 6
-
-                elif play["IsPenalty"] == '1' and TDFlag and puntTDFlag:
-                    if play["PenaltyTeam"] == play["DefenseTeam"] and paly["IsPenaltyAccepted"] == '1':
-                        if play["DefenseTeam"] == team1:
-                            t1Score -= 6
-                        else:
-                            t2Score -= 6
-
-
-
-        elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"]:
-            if play["OffenseTeam"] == team1:
-                t1Score += 1
-            else:
-                t2Score += 1
-        elif play["PlayType"] == "FIELD GOAL" and "IS GOOD" in play["Description"]:
-            if play["OffenseTeam"] == team1:
-                t1Score += 3
-            else:
-                t2Score += 3
-        elif play["IsTwoPointConversionSuccessful"] == "1":
-            if play["OffenseTeam"] == team1:
-                t1Score += 2
-            else:
-                t2Score += 2
-
-        scoreDiff = t1Score - t2Score
-
-    return (t1Score, t2Score), scoreDiff
-=======
 
             if "INTERCEPTED" in play["Description"] or "PUNT" in play["Description"] or "FUMBLE" in play["Description"] or "KICKS" in play["Description"]:
                 addScore = 7
@@ -147,7 +82,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
 
             else:
                 addScore = 6
-                splitDescription = play["Description"].split(". ")             
+                splitDescription = play["Description"].split(". ")
                 for desc in splitDescription:
                     if "TOUCHDOWN" in desc:
                         offTDFlag = 1
@@ -171,7 +106,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                             homeScore -= addScore
                         elif play["OffenseTeam"] == visitingTeam:
                             visitingScore -= addScore
-                        offTDFlag = 0  
+                        offTDFlag = 0
 
         elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"] and play["IsNoPlay"] != '1':
             if play["OffenseTeam"] == homeTeam:
@@ -182,7 +117,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                 if play["OffenseTeam"] == homeTeam:
                     homeScore -= 1
                 elif play["OffenseTeam"] == visitingTeam:
-                    visitingScore -= 1  
+                    visitingScore -= 1
 
         elif play["PlayType"] == "FIELD GOAL" and "IS GOOD" in play["Description"] and play["IsNoPlay"] != '1':
             if play["OffenseTeam"] == homeTeam:
@@ -193,7 +128,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                 if play["OffenseTeam"] == homeTeam:
                     homeScore -= 3
                 elif play["OffenseTeam"] == visitingTeam:
-                    visitingScore -= 3 
+                    visitingScore -= 3
 
         elif play["IsTwoPointConversion"] == "1":
             splitDescription = play["Description"].split(". ")
@@ -209,7 +144,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                         homeScore += 2
                     elif play["OffenseTeam"] == visitingTeam:
                         visitingScore += 2
-                    twoPointConversionFlag = 0                    
+                    twoPointConversionFlag = 0
 
             if play["IsPenaltyAccepted"] == '1' and play["OffenseTeam"] == play["PenaltyTeam"] and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
                 if play["OffenseTeam"] == homeTeam:
@@ -225,7 +160,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                     if play["DefenseTeam"] == homeTeam:
                         homeScore += 2
                     elif play["DefenseTeam"] == visitingTeam:
-                        visitingScore += 2                   
+                        visitingScore += 2
 
                 elif "WAS REVERSED" in desc and safetyFlag:
                     if play["DefenseTeam"] == homeTeam:
@@ -238,10 +173,9 @@ def calculate_score(plays, homeTeam, visitingTeam):
                 if play["DefenseTeam"] == homeTeam:
                     homeScore -= 2
                 elif play["DefenseTeam"] == visitingTeam:
-                    visitingScore -= 2         
+                    visitingScore -= 2
 
     return (homeScore, visitingScore)
->>>>>>> rpcrimi/master
 
 
 def main():
@@ -258,30 +192,17 @@ def main():
         if idExists == 0:
             games.append([play["GameId"], play["HomeTeam"], play["VisitingTeam"]])
 
-<<<<<<< HEAD
-    for game in games.keys():
-        plays = extract_data({"GameId": game}, "AND")
-
-        score, scoreDiff = calculate_score(plays, games[game][0], games[game][1])
-=======
     for game in games:
         plays = extract_data({"GameId": game[0]}, "AND")
         score = calculate_score(plays, game[1], game[2])
->>>>>>> rpcrimi/master
 
         for play in data:
             if play["GameId"] == game[0]:
                 actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
-<<<<<<< HEAD
-                actualScoreDiff = int(play["HomeTeamFinalScore"]) - int(play["VisitingTeamFinalScore"])
-                if play["HomeTeam"] != games[game][0]:
-                    score, scoreDiff = (score[1], score[0]), score[1]-score[0]
-=======
->>>>>>> rpcrimi/master
                 break
 
         numGames += 1
-        if actualScoreDiff != scoreDiff:
+        if actualScore != score:
             numGamesWrong += 1
             print "%s vs %s \tpredicted score: %s \tactual score: %s" % (game[1], game[2], str(score), str(actualScore))
 
