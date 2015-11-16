@@ -63,15 +63,16 @@ class NewPbpExtractor(Extractor):
 
         i = 0
         for play in data:
-            Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
-            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
-
             PlayType, PlayResult = self.seperateY(play)
-            PlayScore = resultMapping(PlayResult)
+            if PlayType in self.typeList:
+                Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
+                feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
 
-            pType[i] = PlayType
-            pScore[i] = PlayScore
-            i += 1
+                PlayScore = resultMapping(PlayResult)
+
+                pType[i] = PlayType
+                pScore[i] = PlayScore
+                i += 1
 
         featureFinal = feature[0:(i-1),:]
         pFinal = pType[0:(i-1)]
@@ -81,6 +82,8 @@ class NewPbpExtractor(Extractor):
 
 data = list(DictReader(open("pbp-2014.csv", 'r')))
 pbp2014 = NewPbpExtractor()
+typeList = [0,1,2]
+pbp2014.typeList = typeList
 pbp2014.extract(data)
 #pbp2014 = PbpExtractor()
 #pbp2014.buildPlayTypeList(data)
