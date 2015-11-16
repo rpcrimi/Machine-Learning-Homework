@@ -13,7 +13,7 @@ class Extractor():
     def extract(self, data):
         return data
 
-class PbpExtractor():
+class PbpExtractor(Extractor):
     def buildPlayTypeList(self, data):
         self.typelist = []
         for play in data:
@@ -24,14 +24,10 @@ class PbpExtractor():
         featureNum = 6
         target = np.zeros(len(data))
         feature= np.zeros((len(data), featureNum))
-        #target = []
         i = 0
         for play in data:
             typeCheck = classifyPlayType(play["PlayType"], self.typelist)
-            #print typeCheck
-            #if True:
             if typeCheck != 0:
-                #print typeCheck
                 Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
                 feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
                 target[i] = typeCheck
@@ -40,10 +36,53 @@ class PbpExtractor():
             targetFinal = target[0:(i-1)]
         return featureFinal, targetFinal
 
-'''
+def resultMapping(PlayResult):
+    return {
+        '1': -4,
+        '2': -2,
+        '3': -2,
+        '4': -2,
+        '5': -1,
+        '6': -1,
+        '7': -1,
+        '8': 2,
+        '9': 3,
+        '10': 4,
+    }.get(PlayResult, 0)
+
+class NewPbpExtractor(Extractor):
+    def seperateY(self, datalist):
+        PlayType = datalist["Y"][1]
+        PlayResult = datalist["Y"][4]
+        return PlayType, PlayResult
+    def extract(self, data):
+        featureNum = 6
+        pType = np.zeros(len(data))
+        pScore = np.zeros(len(data))
+        feature= np.zeros((len(data), featureNum))
+
+        i = 0
+        for play in data:
+            Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
+            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
+
+            PlayType, PlayResult = self.seperateY(play)
+            PlayScore = resultMapping(PlayResult)
+
+            pType[i] = PlayType
+            pScore[i] = PlayScore
+            i += 1
+
+        featureFinal = feature[0:(i-1),:]
+        pFinal = pType[0:(i-1)]
+        sFinal = pScore[0:(i-1)]
+        return featureFinal, pFinal, sFinal
+
+
 data = list(DictReader(open("pbp-2014.csv", 'r')))
-pbp2014 = PbpExtractor()
-pbp2014.buildPlayTypeList(data)
-print len(data)
-print classifyPlayType(data[0]["PlayType"], pbp2014.typelist) != 0
-'''
+pbp2014 = NewPbpExtractor()
+pbp2014.extract(data)
+#pbp2014 = PbpExtractor()
+#pbp2014.buildPlayTypeList(data)
+#print len(data)
+#print classifyPlayType(data[0]["PlayType"], pbp2014.typelist) != 0
