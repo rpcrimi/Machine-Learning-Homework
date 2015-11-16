@@ -192,7 +192,13 @@ def main():
         if idExists == 0:
             games.append([play["GameId"], play["HomeTeam"], play["VisitingTeam"]])
 
+    analyzed = []
     for game in games:
+        if game in analyzed:
+            print game
+        else:
+            analyzed.append(game)
+        numGames += 1
         plays = extract_data({"GameId": game[0]}, "AND")
         score = calculate_score(plays, game[1], game[2])
 
@@ -201,7 +207,6 @@ def main():
                 actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
                 break
 
-        numGames += 1
         if actualScore != score:
             numGamesWrong += 1
             print "%s vs %s \tpredicted score: %s \tactual score: %s" % (game[1], game[2], str(score), str(actualScore))
