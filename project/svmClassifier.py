@@ -1,10 +1,11 @@
 #import math
 from csv import DictReader, DictWriter
+
 from extractor import NewPbpExtractor
+from nflClassifier import *
+from nflEvaluation import *
 
-from evaluation import classifierEvaluation
-
-class svmClassifier():
+class svmClassifier(classifier):
     def __init__(self):
         from sklearn import svm
         self.clf = svm.SVC(gamma=0.001, C=100.)
@@ -18,8 +19,10 @@ pbp2014 = NewPbpExtractor()
 feature, target = pbp2014.extract4Classifier(data)
 svmClassifer = svmClassifier()
 svmClassifer.classify(feature, target)
-y_pred = svmClassifer.predict(feature)
+temp = svmClassifer.predict(feature)
+y_pred = svmClassifer.recommendation(svmClassifer.predict(feature))
+#print y_pred
 #print("Number of mislabeled points out of a total %d points : %d" % (len(target),(target != y_pred).sum()))
-
 class2014 = classifierEvaluation()
+print class2014.Score(target, temp)
 print class2014.Score(target, y_pred)

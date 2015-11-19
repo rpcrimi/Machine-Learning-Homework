@@ -52,16 +52,17 @@ def resultMapping(PlayResult):
 
 class NewPbpExtractor(Extractor):
     def seperateY(self, datalist):
-        PlayType = datalist["Y"][1]
-        PlayResult = datalist["Y"][4]
+        PlayType = float(datalist["Y"][1])
+        PlayResult = float(datalist["Y"][4])
         temp = datalist["Y"][5]
-        if temp == 0:
+        if temp == "0":
             PlayResult = 10
         return PlayType, PlayResult
     def extract(self, data):
         featureNum = 6
         pType = np.zeros(len(data))
         pScore = np.zeros(len(data))
+        pResult = np.zeros(len(data))
         feature= np.zeros((len(data), featureNum))
 
         i = 0
@@ -75,14 +76,16 @@ class NewPbpExtractor(Extractor):
 
             pType[i] = PlayType
             pScore[i] = PlayScore
+            pResult[i] = PlayResult
             i += 1
 
         featureFinal = feature[0:(i-1),:]
         pFinal = pType[0:(i-1)]
         sFinal = pScore[0:(i-1)]
-        return featureFinal, pFinal, sFinal
+        rFinal = pResult[0:(i-1)]
+        return featureFinal, pFinal, sFinal, rFinal
     def extract4Classifier(self, data):
-        feature, pFinal, sFinal = self.extract(data)
+        feature, pFinal, sFinal, rFinal = self.extract(data)
         #targetFinal = np.zeros(len(pFinal))
         #print np.size(feature)
         #print len(pFinal)
@@ -92,16 +95,21 @@ class NewPbpExtractor(Extractor):
         #print pFinal[0]
         #print (pFinal[0] - 0 ) < .0001
         for j in range(len(feature)):
-            if (pFinal[j] - 0 ) > .0001 and (sFinal[j] - 0 ) > .0001:
+            if (pFinal[j] - 0 ) > .0001 and (rFinal[j] - 0 ) > .0001:
                 featureClass[i,:] = feature[j,:]
-                itemClass[i] = sFinal[j] + (pFinal[j] - 1)*10
+                itemClass[i] = rFinal[j] + (pFinal[j] - 1)*10
+                #print rFinal[j]
+                #print pFinal[j]
                 i += 1
+
+        #print itemClass[500:1000]
         return featureClass[0:(i-1),:], itemClass[0:(i-1)]
 
 
 #data = list(DictReader(open("pbp-2014.csv", 'r')))
 #pbp2014 = NewPbpExtractor()
 #pbp2014.extract4Classifier(data)
+
 #pbp2014 = PbpExtractor()
 #pbp2014.buildPlayTypeList(data)
 #print len(data)
