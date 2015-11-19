@@ -18,6 +18,3 @@ with open("pbp-2014New.csv", "w") as csvFile:
         del play["TeamWin"]
 
         writer.writerow(play)
-
-
-
