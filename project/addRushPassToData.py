@@ -96,4 +96,3 @@ for gameID in gameIDs:
 					vAverageRush = vRushYards/vRushAttempts
 
 	print "%s Rush/Pass: %f/%f \t%s Rush/Pass: %f/%f" % (play["HomeTeam"], hAverageRush, hAveragePass, play["VisitingTeam"], vAverageRush, vAveragePass)
-	

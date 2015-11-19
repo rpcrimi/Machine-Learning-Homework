@@ -9,13 +9,13 @@ resultsData = list(DictReader(open("results2014.csv", 'r')))
 
 downs = [(str(d), str(t)) for d in range(1, 5) for t in range(1, 11)]
 
-teams = {'BUF': 'Bills',      'BAL': 'Ravens',   'ATL': 'Falcons',  'SEA': 'Seahawks', 
-         'GB':  'Packers',    'NO':  'Saints',   'CIN': 'Bengals',  'CHI': 'Bears', 
-         'WAS': 'Redskins',   'HOU': 'Texans',   'KC':  'Chiefs',   'TEN': 'Titans',   
-         'MIA': 'Dolphins',   'NE':  'Patriots', 'OAK': 'Raiders',  'NYJ': 'Jets', 
-         'PHI': 'Eagles',     'JAC': 'Jaguars',  'CLE': 'Browns',   'PIT': 'Steelers', 
-         'STL': 'Rams',       'MIN': 'Vikings',  'SF':  '49ers',    'DAL': 'Cowboys', 
-         'TB':  'Buccaneers', 'CAR': 'Panthers', 'DEN': 'Broncos',  'IND': 'Colts',    
+teams = {'BUF': 'Bills',      'BAL': 'Ravens',   'ATL': 'Falcons',  'SEA': 'Seahawks',
+         'GB':  'Packers',    'NO':  'Saints',   'CIN': 'Bengals',  'CHI': 'Bears',
+         'WAS': 'Redskins',   'HOU': 'Texans',   'KC':  'Chiefs',   'TEN': 'Titans',
+         'MIA': 'Dolphins',   'NE':  'Patriots', 'OAK': 'Raiders',  'NYJ': 'Jets',
+         'PHI': 'Eagles',     'JAC': 'Jaguars',  'CLE': 'Browns',   'PIT': 'Steelers',
+         'STL': 'Rams',       'MIN': 'Vikings',  'SF':  '49ers',    'DAL': 'Cowboys',
+         'TB':  'Buccaneers', 'CAR': 'Panthers', 'DEN': 'Broncos',  'IND': 'Colts',
          'NYG': 'Giants',     'DET': 'Lions',    'SD':  'Chargers', 'ARI': 'Cardinals'}
 
 
@@ -82,7 +82,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
 
             else:
                 addScore = 6
-                splitDescription = play["Description"].split(". ")             
+                splitDescription = play["Description"].split(". ")
                 for desc in splitDescription:
                     if "TOUCHDOWN" in desc:
                         offTDFlag = 1
@@ -106,7 +106,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                             homeScore -= addScore
                         elif play["OffenseTeam"] == visitingTeam:
                             visitingScore -= addScore
-                        offTDFlag = 0  
+                        offTDFlag = 0
 
         elif play["PlayType"] == "EXTRA POINT" and "IS GOOD" in play["Description"] and play["IsNoPlay"] != '1':
             if play["OffenseTeam"] == homeTeam:
@@ -117,7 +117,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                 if play["OffenseTeam"] == homeTeam:
                     homeScore -= 1
                 elif play["OffenseTeam"] == visitingTeam:
-                    visitingScore -= 1  
+                    visitingScore -= 1
 
         elif play["PlayType"] == "FIELD GOAL" and "IS GOOD" in play["Description"] and play["IsNoPlay"] != '1':
             if play["OffenseTeam"] == homeTeam:
@@ -128,7 +128,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                 if play["OffenseTeam"] == homeTeam:
                     homeScore -= 3
                 elif play["OffenseTeam"] == visitingTeam:
-                    visitingScore -= 3 
+                    visitingScore -= 3
 
         elif play["IsTwoPointConversion"] == "1":
             splitDescription = play["Description"].split(". ")
@@ -144,7 +144,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                         homeScore += 2
                     elif play["OffenseTeam"] == visitingTeam:
                         visitingScore += 2
-                    twoPointConversionFlag = 0                    
+                    twoPointConversionFlag = 0
 
             if play["IsPenaltyAccepted"] == '1' and play["OffenseTeam"] == play["PenaltyTeam"] and "ENFORCED BETWEEN DOWNS" not in play["Description"]:
                 if play["OffenseTeam"] == homeTeam:
@@ -160,7 +160,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                     if play["DefenseTeam"] == homeTeam:
                         homeScore += 2
                     elif play["DefenseTeam"] == visitingTeam:
-                        visitingScore += 2                   
+                        visitingScore += 2
 
                 elif "WAS REVERSED" in desc and safetyFlag:
                     if play["DefenseTeam"] == homeTeam:
@@ -173,7 +173,7 @@ def calculate_score(plays, homeTeam, visitingTeam):
                 if play["DefenseTeam"] == homeTeam:
                     homeScore -= 2
                 elif play["DefenseTeam"] == visitingTeam:
-                    visitingScore -= 2         
+                    visitingScore -= 2
 
     return (homeScore, visitingScore)
 
