@@ -3,8 +3,6 @@ from csv import DictReader, DictWriter
 from extractor import NewPbpExtractor
 from bayesClassifier import Classifier
 
-
-
 class svmClassifier(Classifier):
     def __init__(self):
         from sklearn import svm
@@ -12,7 +10,7 @@ class svmClassifier(Classifier):
     def classify(self, data, target):
         self.clf.fit(data, target)
     def predict(self, data):
-        return self.gnb.predict(data)
+        return self.clf.predict(data)
 
 
 data = list(DictReader(open("pbp-2014.csv", 'r')))
