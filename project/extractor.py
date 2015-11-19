@@ -54,6 +54,9 @@ class NewPbpExtractor(Extractor):
     def seperateY(self, datalist):
         PlayType = datalist["Y"][1]
         PlayResult = datalist["Y"][4]
+        temp = datalist["Y"][5]
+        if temp == 0:
+            PlayResult = 10
         return PlayType, PlayResult
     def extract(self, data):
         featureNum = 6
@@ -64,27 +67,41 @@ class NewPbpExtractor(Extractor):
         i = 0
         for play in data:
             PlayType, PlayResult = self.seperateY(play)
-            if PlayType in self.typeList:
-                Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
-                feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
+            #if PlayType in self.typeList:
+            Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
+            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
 
-                PlayScore = resultMapping(PlayResult)
+            PlayScore = resultMapping(PlayResult)
 
-                pType[i] = PlayType
-                pScore[i] = PlayScore
-                i += 1
+            pType[i] = PlayType
+            pScore[i] = PlayScore
+            i += 1
 
         featureFinal = feature[0:(i-1),:]
         pFinal = pType[0:(i-1)]
         sFinal = pScore[0:(i-1)]
         return featureFinal, pFinal, sFinal
+    def extract4Classifier(self, data):
+        feature, pFinal, sFinal = self.extract(data)
+        #targetFinal = np.zeros(len(pFinal))
+        #print np.size(feature)
+        #print len(pFinal)
+        featureClass= np.zeros((np.size(feature,0), np.size(feature,1)))
+        itemClass = np.zeros(len(pFinal))
+        i = 0
+        #print pFinal[0]
+        #print (pFinal[0] - 0 ) < .0001
+        for j in range(len(feature)):
+            if (pFinal[j] - 0 ) > .0001 and (sFinal[j] - 0 ) > .0001:
+                featureClass[i,:] = feature[j,:]
+                itemClass[i] = sFinal[j] + (pFinal[j] - 1)*10
+                i += 1
+        return featureClass[0:(i-1),:], itemClass[0:(i-1)]
 
 
-data = list(DictReader(open("pbp-2014.csv", 'r')))
-pbp2014 = NewPbpExtractor()
-typeList = [0,1,2]
-pbp2014.typeList = typeList
-pbp2014.extract(data)
+#data = list(DictReader(open("pbp-2014.csv", 'r')))
+#pbp2014 = NewPbpExtractor()
+#pbp2014.extract4Classifier(data)
 #pbp2014 = PbpExtractor()
 #pbp2014.buildPlayTypeList(data)
 #print len(data)

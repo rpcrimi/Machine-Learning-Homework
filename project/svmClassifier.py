@@ -1,6 +1,6 @@
 
 from csv import DictReader, DictWriter
-from extractor import PbpExtractor
+from extractor import NewPbpExtractor
 from bayesClassifier import Classifier
 
 
@@ -16,9 +16,9 @@ class svmClassifier(Classifier):
 
 
 data = list(DictReader(open("pbp-2014.csv", 'r')))
-pbp2014 = PbpExtractor()
-#feature, target = pbp2014.extract(data)
+pbp2014 = NewPbpExtractor()
+feature, target = pbp2014.extract4Classifier(data)
 svmClassifer = svmClassifier()
 svmClassifer.classify(feature, target)
-#y_pred = svmClassifer.predict(feature)
-#print("Number of mislabeled points out of a total %d points : %d" % (len(target),(target != y_pred).sum()))
+y_pred = svmClassifer.predict(feature)
+print("Number of mislabeled points out of a total %d points : %d" % (len(target),(target != y_pred).sum()))
