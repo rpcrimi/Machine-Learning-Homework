@@ -14,15 +14,15 @@ class svmClassifier(classifier):
     def predict(self, data):
         return self.clf.predict(data)
 
-data = list(DictReader(open("pbp-2014.csv", 'r')))
+data = list(DictReader(open("pbp-2014&13.csv", 'r')))
 pbp2014 = NewPbpExtractor()
 feature, target = pbp2014.extract4Classifier(data)
 svmClassifer = svmClassifier()
 svmClassifer.classify(feature, target)
 temp = svmClassifer.predict(feature)
-y_pred = svmClassifer.recommendation(svmClassifer.predict(feature))
+y_pred = svmClassifer.recommendation(temp)
 #print y_pred
-#print("Number of mislabeled points out of a total %d points : %d" % (len(target),(target != y_pred).sum()))
+print("Number of mislabeled points out of a total %d points : %d" % (len(target),(target != y_pred).sum()))
 class2014 = classifierEvaluation()
-print class2014.Score(target, temp)
+#print class2014.Score(target, temp)
 print class2014.Score(target, y_pred)
