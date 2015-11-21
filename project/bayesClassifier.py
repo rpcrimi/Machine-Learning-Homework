@@ -21,16 +21,17 @@ pbp2014 = NewPbpExtractor()
 feature, target = pbp2014.extract4Classifier(data)
 byClassifer = BayesClassifier()
 byClassifer.classify(feature, target)
-#20143
+#2014
+'''
 temp = byClassifer.predict(feature)
 y_pred = byClassifer.recommendation(byClassifer.predict(feature))
 print("Number of a total %d points" % len(target) )
 class2014 = classifierEvaluation()
 print class2014.Score(target, temp)
 print class2014.Score(target, y_pred)
-
-#2013
 '''
+#2013
+
 data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
 feature, target = pbp2014.extract4Classifier(data2013)
 temp = byClassifer.predict(feature)
@@ -39,4 +40,3 @@ print("Number of a total %d points" % len(target) )
 class2013 = classifierEvaluation()
 print class2013.Score(target, temp)
 print class2013.Score(target, y_pred)
-'''
