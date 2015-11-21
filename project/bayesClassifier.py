@@ -27,7 +27,7 @@ temp = byClassifer.predict(feature)
 y_pred = byClassifer.recommendation(temp)
 print("Number of a total %d points" % len(target) )
 class2014 = classifierEvaluation()
-print class2014.Score(target, temp)
+#print class2014.Score(target, temp)
 print class2014.Score(target, y_pred)
 
 #2013
