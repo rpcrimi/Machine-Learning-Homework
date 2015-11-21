@@ -92,7 +92,7 @@ class NewPbpExtractor(Extractor):
         return PlayType, PlayResult
     def extract(self, data):
         self.buildFormationList(data)
-        featureNum = 6
+        featureNum = 10
         pType = np.zeros(len(data))
         pScore = np.zeros(len(data))
         pResult = np.zeros(len(data))
@@ -106,8 +106,8 @@ class NewPbpExtractor(Extractor):
             YardLineDirection = numericalYardLineDirection(play["YardLineDirection"])
             HomeTeambeOffenseTeam = isHomeTeambeOffenseTeam(play["HomeTeam"], play["OffenseTeam"])
             Yards = yards(play["Yards"])
-            #feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation ])
-            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
+            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation ])
+            #feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
 
             PlayScore = resultMapping(PlayResult)
 
