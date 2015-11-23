@@ -36,7 +36,8 @@ class classifier():
         PlayType, Result = restorePlayType(classType)
         if gFunction(Result) < 0.0001:
             PlayType = self.switchPlayType(PlayType)
-        return PlayType
+        recommendationCalss = (PlayType-1)*10 + Result
+        return recommendationCalss
     def recommendation(self, predict):
         recommendation = np.zeros(np.size(predict))
         for i in range(np.size(predict)):

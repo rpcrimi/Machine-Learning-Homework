@@ -8,6 +8,19 @@ def restorePlayType(classType):
     return PlayType, Result
 #from nflClassifier import restorePlayType
 
+def classifyResultType(actualPlayType,actualResult, recommendPlayType):
+    if gFunction(actualResult) == 1:
+        if abs(recommendPlayType - actualPlayType) < 0.0001:
+            ResultType = 1
+        else:
+            ResultType = 3
+    else:
+        if abs(recommendPlayType - actualPlayType) < 0.0001:
+            ResultType = 4
+        else:
+            ResultType = 2
+    return ResultType
+
 def iFunction(y1, y2):
     i = 0.0
     if abs(y1-y2) < 0.0001:
@@ -38,9 +51,12 @@ class evaluation():
 class classifierEvaluation(evaluation):
     def Score(self, actualClass, RecommendClass):
         score = 0
+        typeScore = np.zeros(4)
         for i in range(len(actualClass)):
             actualPlayType, actualResult = restorePlayType(actualClass[i])
             recommendPlayType, recommendResult = restorePlayType(RecommendClass[i])
 
             score += self.singleScore(actualPlayType, actualResult, recommendPlayType)
-        return score
+            typeScore[classifyResultType(actualPlayType, actualResult, recommendPlayType) - 1] += 1
+
+        return score, typeScore
