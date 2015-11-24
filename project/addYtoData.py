@@ -15,9 +15,9 @@ SAFETY = 2
 DEF_TOUCHDOWN = 1
 NOT_PASS_RUSH = 0
 
-data = list(DictReader(open("pbp-2013.csv", 'r')))
+data = list(DictReader(open("pbp-2015.csv", 'r')))
 
-with open("pbp-2013New.csv", "w") as csvFile:
+with open("pbp-2015New.csv", "w") as csvFile:
 	fieldnames = ["GameId","GameDate","Quarter","Minute","Second","OffenseTeam","DefenseTeam","Down","ToGo","YardLine","SeriesFirstDown","Description","SeasonYear","Yards","Formation","PlayType","IsRush","IsPass","IsIncomplete","IsTouchdown","PassType","IsSack","IsChallenge","IsChallengeReversed","IsInterception","IsFumble","IsPenalty","IsTwoPointConversion","IsTwoPointConversionSuccessful","RushDirection","YardLineFixed","YardLineDirection","IsPenaltyAccepted","PenaltyTeam","IsNoPlay","PenaltyType","PenaltyYards","HomeTeam","VisitingTeam","HomeTeamFinalScore","VisitingTeamFinalScore", "Y"]
 	writer = DictWriter(csvFile, fieldnames=fieldnames, extrasaction='ignore')
 	writer.writeheader()
