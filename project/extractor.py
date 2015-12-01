@@ -1,5 +1,6 @@
 from csv import DictReader, DictWriter
 import numpy as np
+import re
 
 def classifyType(Type, typelist):
     for i in range(len(typelist)):
@@ -8,6 +9,11 @@ def classifyType(Type, typelist):
             value = i
             break
     return value
+
+def seperateVector(datalist):
+    temp = str(datalist)
+    temp1 = re.findall(r'\b\d+\b', temp)
+    return temp1[0], temp1[0]
 
 def numericalYardLineDirection(data):
     #print data
@@ -20,11 +26,17 @@ def numericalYardLineDirection(data):
         z = 3
     return z
 
-def isHomeTeambeOffenseTeam(HomeTeam,OffenseTeam):
+def isHomeTeambeOffenseTeam(HomeTeam, OffenseTeam, CurrentScore):
+    HomeScore, VisitScore = seperateVector(CurrentScore)
     z = 0
     if  HomeTeam == OffenseTeam:
         z = 1
-    return z
+        OffenseScore = HomeScore
+        DefScore = VisitScore
+    else:
+        OffenseScore = VisitScore
+        DefScore = HomeScore
+    return z, OffenseScore, DefScore
 
 def yards(data):
      try:
@@ -83,13 +95,6 @@ def resultMapping(PlayResult):
     }.get(PlayResult, 0)
 
 class NewPbpExtractor(Extractor):
-    def seperateY(self, datalist):
-        PlayType = float(datalist["Y"][1])
-        PlayResult = float(datalist["Y"][4])
-        temp = datalist["Y"][5]
-        if temp == "0":
-            PlayResult = 10
-        return PlayType, PlayResult
     def extract(self, data):
         featureNum = 10
         pType = np.zeros(len(data))
@@ -99,11 +104,11 @@ class NewPbpExtractor(Extractor):
 
         i = 0
         for play in data:
-            PlayType, PlayResult = self.seperateY(play)
+            PlayType, PlayResult = seperateVector(play["Y"])
             Formation = classifyType(play["Formation"], self.formationlist)
             Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
             YardLineDirection = numericalYardLineDirection(play["YardLineDirection"])
-            HomeTeambeOffenseTeam = isHomeTeambeOffenseTeam(play["HomeTeam"], play["OffenseTeam"])
+            HomeTeambeOffenseTeam, OffenseScore, DefScore = isHomeTeambeOffenseTeam(play["HomeTeam"], play["OffenseTeam"], play["CurrentScore"])
             Yards = yards(play["Yards"])
             feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation ])
             #feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
@@ -140,13 +145,3 @@ class NewPbpExtractor(Extractor):
 
         #print itemClass[500:1000]
         return featureClass[0:(i-1),:], itemClass[0:(i-1)]
-
-
-#data = list(DictReader(open("pbp-2014.csv", 'r')))
-#pbp2014 = NewPbpExtractor()
-#pbp2014.extract4Classifier(data)
-
-#pbp2014 = PbpExtractor()
-#pbp2014.buildPlayTypeList(data)
-#print len(data)
-#print classifyPlayType(data[0]["PlayType"], pbp2014.typelist) != 0

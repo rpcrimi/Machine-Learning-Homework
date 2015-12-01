@@ -25,20 +25,20 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 
 #--------------------------------------------------#
 #BayesClassifier
-#clf = BayesClassifier()
+clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
-clf = svmClassifier()
-clf.linear()
+#clf = svmClassifier()
+#clf.linear()
 #--------------------------------------------------#
 #KNeighborsClassifier
 #clf = knClassifier()
 #--------------------------------------------------#
+
 clf.classify(X_train, y_train)
 temp = clf.predict(X_test)
 y_pred = clf.recommendation(temp)
 #--------------------------------------------------#
-
 print("Number of a total %d points" % len(y_test) )
 class2014 = classifierEvaluation()
 print class2014.Score(y_test, y_pred)
