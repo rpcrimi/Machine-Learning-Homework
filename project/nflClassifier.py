@@ -23,6 +23,12 @@ def restorePlayType(classType):
 
 
 class classifier():
+    def classify(self, data, target):
+        self.clf.fit(data, target)
+        y_pred = self.clf.predict(data)
+        return y_pred
+    def predict(self, data):
+        return self.clf.predict(data)
     def switchPlayType(self, PlayType):
         pType = 0
         if abs(PlayType-1) < 0.0001:
@@ -30,8 +36,6 @@ class classifier():
         if abs(PlayType-2) < 0.0001:
             pType = 1
         return pType
-    def predict(self,data):
-        return np.zeros(len(data))
     def recommendationSingle(self,classType):
         PlayType, Result = restorePlayType(classType)
         if gFunction(Result) < 0.0001:
@@ -45,3 +49,44 @@ class classifier():
             #print predict[i]
             #print recommendation[i]
         return recommendation
+
+class knClassifier(classifier):
+    def __init__(self):
+        from sklearn.neighbors import KNeighborsClassifier
+        self.clf = KNeighborsClassifier(4)
+class svmClassifier(classifier):
+    def __init__(self):
+        from sklearn import svm
+        self.clf = svm.SVC(gamma=0.001, C=100.)
+    def linear(self, C=0.025):
+        from sklearn import svm
+        self.clf = svm.SVC(kernel="linear", C=C)
+    def gamma(self, gamma=2, C=1):
+        from sklearn import svm
+        self.clf = svm.SVC(gamma=gamma, C=C)
+class BayesClassifier(classifier):
+    def __init__(self):
+        from sklearn.naive_bayes import GaussianNB
+        self.clf = GaussianNB()
+class dtClassifier(classifier):
+    def __init__(self):
+        from sklearn.tree import DecisionTreeClassifier
+        self.clf = DecisionTreeClassifier(max_depth=5)
+class rfClassifier(classifier):
+    def __init__(self):
+        from sklearn.ensemble import RandomForestClassifier
+        self.clf = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
+class adaBoostClassifier(classifier):
+    def __init__(self):
+        from sklearn.ensemble import AdaBoostClassifier
+        self.clf = AdaBoostClassifier()
+'''
+class ldClassifier(classifier):
+    def __init__(self):
+        from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+        self.clf =  LinearDiscriminantAnalysis()
+class qdClassifier(classifier):
+    def __init__(self):
+        from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+        self.clf = QuadraticDiscriminantAnalysis()
+'''
