@@ -58,9 +58,11 @@ class svmClassifier(classifier):
     def __init__(self):
         from sklearn import svm
         self.clf = svm.SVC(gamma=0.001, C=100.)
-    def linear(C=0.025):
+    def linear(self, C=0.025):
+        from sklearn import svm
         self.clf = svm.SVC(kernel="linear", C=C)
     def gamma(self, gamma=2, C=1):
+        from sklearn import svm
         self.clf = svm.SVC(gamma=gamma, C=C)
 class BayesClassifier(classifier):
     def __init__(self):

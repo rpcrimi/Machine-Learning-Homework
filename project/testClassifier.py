@@ -25,10 +25,11 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 
 #--------------------------------------------------#
 #BayesClassifier
-clf = BayesClassifier()
+#clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
-#clf = svmClassifier()
+clf = svmClassifier()
+clf.linear()
 #--------------------------------------------------#
 #KNeighborsClassifier
 #clf = knClassifier()
