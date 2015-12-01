@@ -4,6 +4,8 @@ from extractor import NewPbpExtractor
 from nflEvaluation import *
 from nflClassifier import *
 
+from sklearn.cross_validation import train_test_split
+
 #--------------------------------------------------#
 #training
 data = list(DictReader(open("pbp-2014.csv", 'r')))
@@ -12,42 +14,30 @@ data.extend(data2014)
 pbp2014 = NewPbpExtractor()
 pbp2014.buildFormationList(data)
 feature, target = pbp2014.extract4Classifier(data)
+
+X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.2, random_state=42)
+
 #test
 #data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
-data2015 = list(DictReader(open("pbp-2014.csv", 'r')))
-feature2015, target2015 = pbp2014.extract4Classifier(data2015)
+#X_test, y_test = pbp2014.extract4Classifier(data2015)
 #--------------------------------------------------#
 
 
 #--------------------------------------------------#
 #BayesClassifier
-'''
-from bayesClassifier import BayesClassifier
-byClassifer = BayesClassifier()
-byClassifer.classify(feature, target)
-
-temp = byClassifer.predict(feature2015)
-y_pred = byClassifer.recommendation(temp)
-'''
+clf = BayesClassifier()
 #--------------------------------------------------#
-'''
 #svmClassifier
-from svmClassifier import svmClassifier
-svmClassifer = svmClassifier()
-svmClassifer.classify(feature, target)
-
-temp = svmClassifer.predict(feature2015)
-y_pred = svmClassifer.recommendation(temp)
-'''
+#clf = svmClassifier()
 #--------------------------------------------------#
 #KNeighborsClassifier
-knClassifer = knClassifier()
-knClassifer.classify(feature, target)
-
-temp = knClassifer.predict(feature2015)
-y_pred = knClassifer.recommendation(temp)
+#clf = knClassifier()
+#--------------------------------------------------#
+clf.classify(X_train, y_train)
+temp = clf.predict(X_test)
+y_pred = clf.recommendation(temp)
 #--------------------------------------------------#
 
-print("Number of a total %d points" % len(target2015) )
+print("Number of a total %d points" % len(y_test) )
 class2014 = classifierEvaluation()
-print class2014.Score(target2015, y_pred)
+print class2014.Score(y_test, y_pred)
