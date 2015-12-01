@@ -49,3 +49,20 @@ class classifier():
             #print predict[i]
             #print recommendation[i]
         return recommendation
+
+class knClassifier(classifier):
+    from sklearn.neighbors import KNeighborsClassifier
+    def __init__(self):
+        self.clf = KNeighborsClassifier(3)
+class svmClassifier(classifier):
+    from sklearn import svm
+    def __init__(self):
+        self.clf = svm.SVC(gamma=0.001, C=100.)
+    def linear(C=0.025):
+        self.clf = svm.SVC(kernel="linear", C=C)
+    def gamma(self, gamma=2, C=1):
+        self.clf = svm.SVC(gamma=gamma, C=C)
+class BayesClassifier(classifier):
+    from sklearn.naive_bayes import GaussianNB
+    def __init__(self):
+        self.clf = GaussianNB()        

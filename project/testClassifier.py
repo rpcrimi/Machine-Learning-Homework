@@ -20,21 +20,32 @@ feature2015, target2015 = pbp2014.extract4Classifier(data2015)
 
 #--------------------------------------------------#
 #BayesClassifier
+'''
 from bayesClassifier import BayesClassifier
 byClassifer = BayesClassifier()
 byClassifer.classify(feature, target)
 
 temp = byClassifer.predict(feature2015)
 y_pred = byClassifer.recommendation(temp)
+'''
 #--------------------------------------------------#
 '''
 #svmClassifier
+from svmClassifier import svmClassifier
 svmClassifer = svmClassifier()
 svmClassifer.classify(feature, target)
 
 temp = svmClassifer.predict(feature2015)
 y_pred = svmClassifer.recommendation(temp)
 '''
+#--------------------------------------------------#
+#KNeighborsClassifier
+from KNeighborsClassifier import knClassifier
+knClassifer = knClassifier()
+knClassifer.classify(feature, target)
+
+temp = knClassifer.predict(feature2015)
+y_pred = knClassifer.recommendation(temp)
 #--------------------------------------------------#
 
 print("Number of a total %d points" % len(target2015) )
