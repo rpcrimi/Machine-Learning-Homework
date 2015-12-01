@@ -16,28 +16,18 @@ class BayesClassifier(classifier):
     def predict(self, data):
         return self.gnb.predict(data)
 
-data = list(DictReader(open("pbp-2014&13.csv", 'r')))
+data = list(DictReader(open("pbp-2014.csv", 'r')))
+data2014 = list(DictReader(open("pbp-2013.csv", 'r')))
+data.extend(data2014)
+print len(data)
+
 pbp2014 = NewPbpExtractor()
 feature, target = pbp2014.extract4Classifier(data)
 byClassifer = BayesClassifier()
 byClassifer.classify(feature, target)
-#2014
 
 temp = byClassifer.predict(feature)
 y_pred = byClassifer.recommendation(temp)
 print("Number of a total %d points" % len(target) )
 class2014 = classifierEvaluation()
-#print class2014.Score(target, temp)
 print class2014.Score(target, y_pred)
-
-#2013
-'''
-data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
-feature, target = pbp2014.extract4Classifier(data2013)
-temp = byClassifer.predict(feature)
-y_pred = byClassifer.recommendation(byClassifer.predict(feature))
-print("Number of a total %d points" % len(target) )
-class2013 = classifierEvaluation()
-print class2013.Score(target, temp)
-print class2013.Score(target, y_pred)
-'''
