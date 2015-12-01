@@ -51,38 +51,38 @@ class classifier():
         return recommendation
 
 class knClassifier(classifier):
-    from sklearn.neighbors import KNeighborsClassifier
     def __init__(self):
-        self.clf = KNeighborsClassifier(3)
+        from sklearn.neighbors import KNeighborsClassifier
+        self.clf = KNeighborsClassifier(4)
 class svmClassifier(classifier):
-    from sklearn import svm
     def __init__(self):
+        from sklearn import svm
         self.clf = svm.SVC(gamma=0.001, C=100.)
     def linear(C=0.025):
         self.clf = svm.SVC(kernel="linear", C=C)
     def gamma(self, gamma=2, C=1):
         self.clf = svm.SVC(gamma=gamma, C=C)
 class BayesClassifier(classifier):
-    from sklearn.naive_bayes import GaussianNB
     def __init__(self):
+        from sklearn.naive_bayes import GaussianNB
         self.clf = GaussianNB()
 class dtClassifier(classifier):
-    from sklearn.tree import DecisionTreeClassifier
     def __init__(self):
+        from sklearn.tree import DecisionTreeClassifier
         self.clf = DecisionTreeClassifier(max_depth=5)
 class rfClassifier(classifier):
-    from sklearn.ensemble import RandomForestClassifier
     def __init__(self):
+        from sklearn.ensemble import RandomForestClassifier
         self.clf = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
 class adaBoostClassifier(classifier):
-    from sklearn.ensemble import AdaBoostClassifier
     def __init__(self):
+        from sklearn.ensemble import AdaBoostClassifier
         self.clf = AdaBoostClassifier()
 class ldClassifier(classifier):
-    from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
     def __init__(self):
+        from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
         self.clf =  LinearDiscriminantAnalysis()
 class ldClassifier(classifier):
-    from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
     def __init__(self):
+        from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
         self.clf = QuadraticDiscriminantAnalysis()

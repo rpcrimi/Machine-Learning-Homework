@@ -2,6 +2,7 @@ from csv import DictReader, DictWriter
 
 from extractor import NewPbpExtractor
 from nflEvaluation import *
+from nflClassifier import *
 
 #--------------------------------------------------#
 #training
@@ -40,7 +41,6 @@ y_pred = svmClassifer.recommendation(temp)
 '''
 #--------------------------------------------------#
 #KNeighborsClassifier
-from KNeighborsClassifier import knClassifier
 knClassifer = knClassifier()
 knClassifer.classify(feature, target)
 
