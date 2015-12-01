@@ -16,8 +16,6 @@ def seperateVector(datalist):
     return temp1[0], temp1[1]
 
 def numericalYardLineDirection(data):
-    #print data
-    #z = 1
     if data == "OWN":
         z = 1
     elif data == "OPP":
@@ -45,8 +43,6 @@ def yards(data):
      except ValueError:
          z = 0
      return z
-
-
 
 class Extractor():
     def buildPlayTypeList(self, data):
@@ -124,24 +120,16 @@ class NewPbpExtractor(Extractor):
         sFinal = pScore[0:(i-1)]
         rFinal = pResult[0:(i-1)]
         return featureFinal, pFinal, sFinal, rFinal
-        
+
     def extract4Classifier(self, data):
         feature, pFinal, sFinal, rFinal = self.extract(data)
-        #targetFinal = np.zeros(len(pFinal))
-        #print np.size(feature)
-        #print len(pFinal)
         featureClass= np.zeros((np.size(feature,0), np.size(feature,1)))
         itemClass = np.zeros(len(pFinal))
         i = 0
-        #print pFinal[0]
-        #print (pFinal[0] - 0 ) < .0001
         for j in range(len(feature)):
             if (pFinal[j] - 0 ) > .0001 and (rFinal[j] - 0 ) > .0001:
                 featureClass[i,:] = feature[j,:]
                 itemClass[i] = rFinal[j] + (pFinal[j] - 1)*10
-                #print rFinal[j]
-                #print pFinal[j]
                 i += 1
 
-        #print itemClass[500:1000]
         return featureClass[0:(i-1),:], itemClass[0:(i-1)]

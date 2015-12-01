@@ -29,8 +29,8 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 #--------------------------------------------------#
 #svmClassifier
 clf = svmClassifier()
-#clf.linear()
-clf.gamma()
+clf.linear()
+#clf.gamma()
 #--------------------------------------------------#
 #KNeighborsClassifier
 #clf = knClassifier()
