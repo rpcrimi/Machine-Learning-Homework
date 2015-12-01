@@ -23,6 +23,12 @@ def restorePlayType(classType):
 
 
 class classifier():
+    def classify(self, data, target):
+        self.clf.fit(data, target)
+        y_pred = self.clf.predict(data)
+        return y_pred
+    def predict(self, data):
+        return self.clf.predict(data)
     def switchPlayType(self, PlayType):
         pType = 0
         if abs(PlayType-1) < 0.0001:
@@ -30,8 +36,6 @@ class classifier():
         if abs(PlayType-2) < 0.0001:
             pType = 1
         return pType
-    def predict(self,data):
-        return np.zeros(len(data))
     def recommendationSingle(self,classType):
         PlayType, Result = restorePlayType(classType)
         if gFunction(Result) < 0.0001:
