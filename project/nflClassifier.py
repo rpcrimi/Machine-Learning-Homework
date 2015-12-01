@@ -80,11 +80,13 @@ class adaBoostClassifier(classifier):
     def __init__(self):
         from sklearn.ensemble import AdaBoostClassifier
         self.clf = AdaBoostClassifier()
+'''
 class ldClassifier(classifier):
     def __init__(self):
         from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
         self.clf =  LinearDiscriminantAnalysis()
-class ldClassifier(classifier):
+class qdClassifier(classifier):
     def __init__(self):
         from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
         self.clf = QuadraticDiscriminantAnalysis()
+'''

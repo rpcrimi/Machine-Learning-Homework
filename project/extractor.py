@@ -13,7 +13,7 @@ def classifyType(Type, typelist):
 def seperateVector(datalist):
     temp = str(datalist)
     temp1 = re.findall(r'\b\d+\b', temp)
-    return temp1[0], temp1[0]
+    return temp1[0], temp1[1]
 
 def numericalYardLineDirection(data):
     #print data
@@ -96,7 +96,7 @@ def resultMapping(PlayResult):
 
 class NewPbpExtractor(Extractor):
     def extract(self, data):
-        featureNum = 10
+        featureNum = 12
         pType = np.zeros(len(data))
         pScore = np.zeros(len(data))
         pResult = np.zeros(len(data))
@@ -110,8 +110,7 @@ class NewPbpExtractor(Extractor):
             YardLineDirection = numericalYardLineDirection(play["YardLineDirection"])
             HomeTeambeOffenseTeam, OffenseScore, DefScore = isHomeTeambeOffenseTeam(play["HomeTeam"], play["OffenseTeam"], play["CurrentScore"])
             Yards = yards(play["Yards"])
-            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation ])
-            #feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]) ])
+            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation, OffenseScore, DefScore ])
 
             PlayScore = resultMapping(PlayResult)
 
@@ -125,6 +124,7 @@ class NewPbpExtractor(Extractor):
         sFinal = pScore[0:(i-1)]
         rFinal = pResult[0:(i-1)]
         return featureFinal, pFinal, sFinal, rFinal
+        
     def extract4Classifier(self, data):
         feature, pFinal, sFinal, rFinal = self.extract(data)
         #targetFinal = np.zeros(len(pFinal))

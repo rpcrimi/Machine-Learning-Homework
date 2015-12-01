@@ -25,15 +25,26 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 
 #--------------------------------------------------#
 #BayesClassifier
-clf = BayesClassifier()
+#clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
-#clf = svmClassifier()
+clf = svmClassifier()
 #clf.linear()
+clf.gamma()
 #--------------------------------------------------#
 #KNeighborsClassifier
 #clf = knClassifier()
 #--------------------------------------------------#
+#DecisionTreeClassifier
+#clf = dtClassifier()
+#--------------------------------------------------#
+#RandomForestClassifier
+#clf = rfClassifier()
+#--------------------------------------------------#
+#AdaBoostClassifier
+#clf = adaBoostClassifier()
+#--------------------------------------------------#
+
 
 clf.classify(X_train, y_train)
 temp = clf.predict(X_test)
