@@ -65,4 +65,24 @@ class svmClassifier(classifier):
 class BayesClassifier(classifier):
     from sklearn.naive_bayes import GaussianNB
     def __init__(self):
-        self.clf = GaussianNB()        
+        self.clf = GaussianNB()
+class dtClassifier(classifier):
+    from sklearn.tree import DecisionTreeClassifier
+    def __init__(self):
+        self.clf = DecisionTreeClassifier(max_depth=5)
+class rfClassifier(classifier):
+    from sklearn.ensemble import RandomForestClassifier
+    def __init__(self):
+        self.clf = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
+class adaBoostClassifier(classifier):
+    from sklearn.ensemble import AdaBoostClassifier
+    def __init__(self):
+        self.clf = AdaBoostClassifier()
+class ldClassifier(classifier):
+    from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+    def __init__(self):
+        self.clf =  LinearDiscriminantAnalysis()
+class ldClassifier(classifier):
+    from sklearn.discriminant_analysis import QuadraticDiscriminantAnalysis
+    def __init__(self):
+        self.clf = QuadraticDiscriminantAnalysis()
