@@ -4,8 +4,7 @@ import numpy as np
 import argparse
 import pprint
 
-data = list(DictReader(open("pbp-2014.csv", 'r')))
-resultsData = list(DictReader(open("results2014.csv", 'r')))
+data = list(DictReader(open("pbp-2015.csv", 'r')))
 
 downs = [(str(d), str(t)) for d in range(1, 5) for t in range(1, 11)]
 
@@ -42,7 +41,7 @@ def extract_data(matches, andor):
                 d.append(play)
     return d
 
-def calculate_score(plays, homeTeam, visitingTeam):
+def calculate_score(plays, homeTeam, visitingTeam, writer):
     homeScore = 0
     visitingScore = 0
     for play in plays:
@@ -53,7 +52,6 @@ def calculate_score(plays, homeTeam, visitingTeam):
         fieldGoalFlag = 0
         safetyFlag = 0
         if play["IsTouchdown"] == '1':
-
             if "INTERCEPTED" in play["Description"] or "PUNT" in play["Description"] or "FUMBLE" in play["Description"] or "KICKS" in play["Description"]:
                 addScore = 7
                 splitDescription = play["Description"].split(". ")
@@ -174,6 +172,10 @@ def calculate_score(plays, homeTeam, visitingTeam):
                     homeScore -= 2
                 elif play["DefenseTeam"] == visitingTeam:
                     visitingScore -= 2
+        
+        # UPDATE SCORE
+        play["CurrentScore"] = [homeScore, visitingScore]
+        writer.writerow(play)
 
     return (homeScore, visitingScore)
 
@@ -192,26 +194,30 @@ def main():
         if idExists == 0:
             games.append([play["GameId"], play["HomeTeam"], play["VisitingTeam"]])
 
-    analyzed = []
-    for game in games:
-        if game in analyzed:
-            print game
-        else:
-            analyzed.append(game)
-        numGames += 1
-        plays = extract_data({"GameId": game[0]}, "AND")
-        score = calculate_score(plays, game[1], game[2])
 
-        for play in data:
-            if play["GameId"] == game[0]:
-                actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
-                break
 
-        if actualScore != score:
-            numGamesWrong += 1
-            print "%s vs %s \tpredicted score: %s \tactual score: %s" % (game[1], game[2], str(score), str(actualScore))
+    with open("pbp-2015New.csv", "w") as csvFile:
+        fieldnames = ["GameId","GameDate","Quarter","Minute","Second","OffenseTeam","DefenseTeam","Down","ToGo","YardLine","SeriesFirstDown","Description","SeasonYear","Yards","Formation","PlayType","IsRush","IsPass","IsIncomplete","IsTouchdown","PassType","IsSack","IsChallenge","IsChallengeReversed","IsInterception","IsFumble","IsPenalty","IsTwoPointConversion","IsTwoPointConversionSuccessful","RushDirection","YardLineFixed","YardLineDirection","IsPenaltyAccepted","PenaltyTeam","IsNoPlay","PenaltyType","PenaltyYards","HomeTeam","VisitingTeam","HomeTeamFinalScore","VisitingTeamFinalScore", "Y", "CurrentScore"]
+        writer = DictWriter(csvFile, fieldnames=fieldnames, extrasaction='ignore')
+        writer.writeheader()
+        for game in games:
+            numGames += 1
+            plays = extract_data({"GameId": game[0]}, "AND")
+            score = calculate_score(plays, game[1], game[2], writer)
+
+            '''
+            for play in data:
+                if play["GameId"] == game[0]:
+                    actualScore = (int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"]))
+                    break
+
+            if actualScore != score:
+                numGamesWrong += 1
+                print "%s vs %s \tpredicted score: %s \tactual score: %s" % (game[1], game[2], str(score), str(actualScore))
+
 
     print "Num Game: %d Num Wrong: %d" % (numGames, numGamesWrong)
+    '''
 
 if __name__ == "__main__":
 	main()
