@@ -91,7 +91,6 @@ class NewPbpExtractor(Extractor):
             PlayResult = 10
         return PlayType, PlayResult
     def extract(self, data):
-        self.buildFormationList(data)
         featureNum = 10
         pType = np.zeros(len(data))
         pScore = np.zeros(len(data))
