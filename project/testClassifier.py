@@ -1,10 +1,10 @@
 from csv import DictReader, DictWriter
 
 from extractor import NewPbpExtractor
-from nflEvaluation import *
+from nflEvaluation import classifierEvaluation
 from nflClassifier import *
-
 from sklearn.cross_validation import train_test_split
+
 
 #--------------------------------------------------#
 #training
@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 
 #--------------------------------------------------#
 #BayesClassifier
-clf = BayesClassifier()
+#clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
 #clf = svmClassifier()
@@ -37,6 +37,7 @@ clf = BayesClassifier()
 #--------------------------------------------------#
 #DecisionTreeClassifier
 #clf = dtClassifier()
+clf = dtClassifier()
 #--------------------------------------------------#
 #RandomForestClassifier
 #clf = rfClassifier()

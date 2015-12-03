@@ -2,8 +2,8 @@ import math
 import numpy as np
 
 def restorePlayType(classType):
-    PlayType = math.floor(classType / float(10)) + 1
-    Result = classType % 10
+    PlayType = math.floor(float(classType) / float(10)) + 1
+    Result = float(classType) % 10
     return PlayType, Result
 
 def classifyResultType(actualPlayType,actualResult, recommendPlayType):
@@ -47,6 +47,7 @@ def sFunction(z):
             s = 1
     return s
 
+#weights = {'1': 4, '2': 3, '3': 1, '4': 1, '5': 1, '6': 2, '7': 2, '8': 2, '9': 3, '10': 4, '11': 4, '12': 3, '13': 1, '14': 1, '15': 1, '16': 2, '17': 2, '18': 2, '19': 3, '20': 4}
 
 class evaluation():
     def singleScore(self, actualPlayType, actualResult, recommendPlayType):
