@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 
 #--------------------------------------------------#
 #BayesClassifier
-clf = BayesClassifier()
+#clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
 #clf = svmClassifier()
@@ -36,8 +36,7 @@ clf = BayesClassifier()
 #clf = knClassifier()
 #--------------------------------------------------#
 #DecisionTreeClassifier
-#clf = dtClassifier()
-#clf = dtClassifier()
+clf = dtClassifier()
 #--------------------------------------------------#
 #RandomForestClassifier
 #clf = rfClassifier()
@@ -46,13 +45,12 @@ clf = BayesClassifier()
 #clf = adaBoostClassifier()
 #--------------------------------------------------#
 
-
 clf.classify(X_train, y_train, needWeight=False)
 temp = clf.predict(X_test)
 y_pred = clf.recommendation(temp)
 #--------------------------------------------------#
 class2014 = classifierEvaluation()
-score, num, typeNum = class2014.Score(y_test, y_pred)
-print("Number of a total %d points, Score %d" % (len(y_test), score) )
+score, num, typeNum, omniScore = class2014.Score(y_test, y_pred)
+print("Number of a total %d points, Score %d, percent %f" % (len(y_test), score, score/float(omniScore)) )
 print("Number of a each type")
 print typeNum

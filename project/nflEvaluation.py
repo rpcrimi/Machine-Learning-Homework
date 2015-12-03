@@ -65,6 +65,12 @@ class evaluation():
             num += self.singleNum(actualPlayType[i], actualResult[i], recommendPlayType[i])
         return num
 class classifierEvaluation(evaluation):
+    def omniScore(self, actualClass):
+        score = 0
+        for i in range(len(actualClass)):
+            actualPlayType, actualResult = restorePlayType(actualClass[i])
+            score += sFunction(actualResult)
+        return score
     def Score(self, actualClass, RecommendClass):
         score = 0
         num = 0
@@ -79,4 +85,5 @@ class classifierEvaluation(evaluation):
             num += self.singleNum(actualPlayType, actualResult, recommendPlayType)
             typeNum[classifyResultType(actualPlayType, actualResult, recommendPlayType) - 1] += 1
 
-        return score, num, typeNum
+        omniScore = self.omniScore(actualClass)
+        return score, num, typeNum, omniScore
