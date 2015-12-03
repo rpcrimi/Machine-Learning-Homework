@@ -4,10 +4,11 @@ import numpy as np
 from nflEvaluation import iFunction, gFunction, sFunction, restorePlayType
 
 class classifier():
-    def classify(self, data, target):
-        #X, Y = self.manualWeight(data, target)
-        #self.clf.fit(X, Y)
-        self.clf.fit(data, target)
+    def classify(self, data, target, needWeight=False):
+        X, Y = data, target
+        if needWeight:
+            X, Y = self.manualWeight(data, target)
+        self.clf.fit(X, Y)
     def predict(self, data):
         return self.clf.predict(data)
     def switchPlayType(self, PlayType):

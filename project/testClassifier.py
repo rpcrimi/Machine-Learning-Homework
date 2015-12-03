@@ -25,7 +25,7 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 
 #--------------------------------------------------#
 #BayesClassifier
-#clf = BayesClassifier()
+clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
 #clf = svmClassifier()
@@ -37,7 +37,7 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 #--------------------------------------------------#
 #DecisionTreeClassifier
 #clf = dtClassifier()
-clf = dtClassifier()
+#clf = dtClassifier()
 #--------------------------------------------------#
 #RandomForestClassifier
 #clf = rfClassifier()
@@ -47,7 +47,7 @@ clf = dtClassifier()
 #--------------------------------------------------#
 
 
-clf.classify(X_train, y_train)
+clf.classify(X_train, y_train, needWeight=False)
 temp = clf.predict(X_test)
 y_pred = clf.recommendation(temp)
 #--------------------------------------------------#
