@@ -1,26 +1,7 @@
 import math
 import numpy as np
 
-#from nflEvaluation import *
-def iFunction(y1, y2):
-    i = 0.0
-    if abs(y1-y2) < 0.0001:
-        i = 1.0
-    return i
-def gFunction(z):
-    g = 0
-    if z>=8:
-        g = 1
-    return g
-def sFunction(z):
-    return 1
-#from nflEvaluation import *
-
-def restorePlayType(classType):
-    PlayType = math.floor(classType / float(10)) + 1
-    Result = classType % 10
-    return PlayType, Result
-
+from nflEvaluation import iFunction, gFunction, sFunction, restorePlayType
 
 class classifier():
     def classify(self, data, target):
@@ -46,8 +27,6 @@ class classifier():
         recommendation = np.zeros(np.size(predict))
         for i in range(np.size(predict)):
             recommendation[i] = self.recommendationSingle(predict[i])
-            #print predict[i]
-            #print recommendation[i]
         return recommendation
 
 class knClassifier(classifier):
