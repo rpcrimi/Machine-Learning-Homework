@@ -1,6 +1,7 @@
 from csv import DictReader, DictWriter
 import numpy as np
 import re
+from nflEvaluation import sFunction
 
 def classifyType(Type, typelist):
     for i in range(len(typelist)):

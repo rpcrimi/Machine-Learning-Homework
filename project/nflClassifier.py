@@ -5,9 +5,9 @@ from nflEvaluation import iFunction, gFunction, sFunction, restorePlayType
 
 class classifier():
     def classify(self, data, target):
+        #X, Y = self.manualWeight(data, target)
+        #self.clf.fit(X, Y)
         self.clf.fit(data, target)
-        y_pred = self.clf.predict(data)
-        return y_pred
     def predict(self, data):
         return self.clf.predict(data)
     def switchPlayType(self, PlayType):
@@ -17,6 +17,18 @@ class classifier():
         if abs(PlayType-2) < 0.0001:
             pType = 1
         return pType
+    def manualWeight(self, data, target):
+        w=0
+        X = np.zeros((np.size(data,0)*4, np.size(data,1)))
+        Y = np.zeros(len(target)*4)
+        for i in range(len(data)):
+            PlayType, Result = restorePlayType(target[i])
+            for j in range(sFunction(Result)):
+                X[w,:] = data[i,:]
+                Y[w] = target[i]
+                w += 1
+        return X, Y
+
     def recommendationSingle(self,classType):
         PlayType, Result = restorePlayType(classType)
         if gFunction(Result) < 0.0001:
