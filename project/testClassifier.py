@@ -1,10 +1,10 @@
 from csv import DictReader, DictWriter
 
 from extractor import NewPbpExtractor
-from nflEvaluation import *
+from nflEvaluation import classifierEvaluation
 from nflClassifier import *
-
 from sklearn.cross_validation import train_test_split
+
 
 #--------------------------------------------------#
 #training
@@ -28,15 +28,15 @@ X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.
 #clf = BayesClassifier()
 #--------------------------------------------------#
 #svmClassifier
-clf = svmClassifier()
-clf.linear()
+#clf = svmClassifier()
+#clf.linear()
 #clf.gamma()
 #--------------------------------------------------#
 #KNeighborsClassifier
 #clf = knClassifier()
 #--------------------------------------------------#
 #DecisionTreeClassifier
-#clf = dtClassifier()
+clf = dtClassifier()
 #--------------------------------------------------#
 #RandomForestClassifier
 #clf = rfClassifier()
@@ -45,11 +45,12 @@ clf.linear()
 #clf = adaBoostClassifier()
 #--------------------------------------------------#
 
-
-clf.classify(X_train, y_train)
+clf.classify(X_train, y_train, needWeight=False)
 temp = clf.predict(X_test)
 y_pred = clf.recommendation(temp)
 #--------------------------------------------------#
-print("Number of a total %d points" % len(y_test) )
 class2014 = classifierEvaluation()
-print class2014.Score(y_test, y_pred)
+score, num, typeNum, omniScore = class2014.Score(y_test, y_pred)
+print("Number of a total %d points, Score %d, percent %f" % (len(y_test), score, score/float(omniScore)) )
+print("Number of a each type")
+print typeNum

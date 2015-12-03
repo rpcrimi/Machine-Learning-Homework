@@ -1,6 +1,7 @@
 from csv import DictReader, DictWriter
 import numpy as np
 import re
+from nflEvaluation import sFunction
 
 def classifyType(Type, typelist):
     for i in range(len(typelist)):
@@ -76,20 +77,6 @@ class PbpExtractor(Extractor):
             targetFinal = target[0:(i-1)]
         return featureFinal, targetFinal
 
-def resultMapping(PlayResult):
-    return {
-        '1': -4,
-        '2': -2,
-        '3': -2,
-        '4': -2,
-        '5': -1,
-        '6': -1,
-        '7': -1,
-        '8': 2,
-        '9': 3,
-        '10': 4,
-    }.get(PlayResult, 0)
-
 class NewPbpExtractor(Extractor):
     def extract(self, data):
         featureNum = 12
@@ -108,28 +95,24 @@ class NewPbpExtractor(Extractor):
             Yards = yards(play["Yards"])
             feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation, OffenseScore, DefScore ])
 
-            PlayScore = resultMapping(PlayResult)
-
             pType[i] = PlayType
-            pScore[i] = PlayScore
             pResult[i] = PlayResult
             i += 1
 
         featureFinal = feature[0:(i-1),:]
         pFinal = pType[0:(i-1)]
-        sFinal = pScore[0:(i-1)]
         rFinal = pResult[0:(i-1)]
-        return featureFinal, pFinal, sFinal, rFinal
+        return featureFinal, pFinal, rFinal
 
     def extract4Classifier(self, data):
-        feature, pFinal, sFinal, rFinal = self.extract(data)
+        feature, pFinal, rFinal = self.extract(data)
         featureClass= np.zeros((np.size(feature,0), np.size(feature,1)))
         itemClass = np.zeros(len(pFinal))
         i = 0
         for j in range(len(feature)):
             if (pFinal[j] - 0 ) > .0001 and (rFinal[j] - 0 ) > .0001:
                 featureClass[i,:] = feature[j,:]
-                itemClass[i] = rFinal[j] + (pFinal[j] - 1)*10
+                itemClass[i] = int(rFinal[j] + (pFinal[j] - 1)*10)
                 i += 1
 
         return featureClass[0:(i-1),:], itemClass[0:(i-1)]

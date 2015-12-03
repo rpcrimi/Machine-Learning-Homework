@@ -1,32 +1,14 @@
 import math
 import numpy as np
 
-#from nflEvaluation import *
-def iFunction(y1, y2):
-    i = 0.0
-    if abs(y1-y2) < 0.0001:
-        i = 1.0
-    return i
-def gFunction(z):
-    g = 0
-    if z>=8:
-        g = 1
-    return g
-def sFunction(z):
-    return 1
-#from nflEvaluation import *
-
-def restorePlayType(classType):
-    PlayType = math.floor(classType / float(10)) + 1
-    Result = classType % 10
-    return PlayType, Result
-
+from nflEvaluation import iFunction, gFunction, sFunction, restorePlayType
 
 class classifier():
-    def classify(self, data, target):
-        self.clf.fit(data, target)
-        y_pred = self.clf.predict(data)
-        return y_pred
+    def classify(self, data, target, needWeight=False):
+        X, Y = data, target
+        if needWeight:
+            X, Y = self.manualWeight(data, target)
+        self.clf.fit(X, Y)
     def predict(self, data):
         return self.clf.predict(data)
     def switchPlayType(self, PlayType):
@@ -36,6 +18,18 @@ class classifier():
         if abs(PlayType-2) < 0.0001:
             pType = 1
         return pType
+    def manualWeight(self, data, target):
+        w=0
+        X = np.zeros((np.size(data,0)*4, np.size(data,1)))
+        Y = np.zeros(len(target)*4)
+        for i in range(len(data)):
+            PlayType, Result = restorePlayType(target[i])
+            for j in range(sFunction(Result)):
+                X[w,:] = data[i,:]
+                Y[w] = target[i]
+                w += 1
+        return X, Y
+
     def recommendationSingle(self,classType):
         PlayType, Result = restorePlayType(classType)
         if gFunction(Result) < 0.0001:
@@ -46,8 +40,6 @@ class classifier():
         recommendation = np.zeros(np.size(predict))
         for i in range(np.size(predict)):
             recommendation[i] = self.recommendationSingle(predict[i])
-            #print predict[i]
-            #print recommendation[i]
         return recommendation
 
 class knClassifier(classifier):
