@@ -110,7 +110,7 @@ class NewPbpExtractor(Extractor):
         itemClass = np.zeros(len(pFinal))
         i = 0
         for j in range(len(feature)):
-            if (pFinal[j] - 0 ) > .0001 and (rFinal[j] - 0 ) > .0001:
+            if abs(pFinal[j] - 0 ) > .0001 and abs(rFinal[j] - 0 ) > .0001 and abs(feature[j,2]-0) > .0001 and abs(feature[j,2]-4) > .0001:
                 featureClass[i,:] = feature[j,:]
                 itemClass[i] = int(rFinal[j] + (pFinal[j] - 1)*10)
                 i += 1
