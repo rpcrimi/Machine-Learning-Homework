@@ -20,6 +20,8 @@ data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
 data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
 dataList = [data2013, data2014]
 dataName = ["2013","2014"]
+#dataList = [data2015]
+#dataName = ["2015"]
 
 o = DictWriter(open("output.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
 o.writeheader()
