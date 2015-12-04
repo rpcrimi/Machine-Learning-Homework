@@ -18,13 +18,17 @@ from sklearn.cross_validation import train_test_split
 data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
 data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
 data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
-dataList = [data2013, data2014, data2015]
-dataName = ["2013","2014","2015"]
+dataList = [data2013, data2014]
+dataName = ["2013","2014"]
+
+o = DictWriter(open("output.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
+o.writeheader()
+
 #---------------------------------#
 for dataindex in range(len(dataList)):
     pbp2014 = NewPbpExtractor()
-    pbp2014.buildFormationList(data[dataList])
-    feature, target = pbp2014.extract4Classifier(data[dataList])
+    pbp2014.buildFormationList(dataList[dataindex])
+    feature, target = pbp2014.extract4Classifier(dataList[dataindex])
 
     dataLength = feature.shape[0]
     dataLength80 = round(dataLength * 0.8)
@@ -37,8 +41,6 @@ for dataindex in range(len(dataList)):
     class2014 = classifierEvaluation()
 
     Bscore, Bnum, BtypeNum, BomniScore = class2014.Score(y_test, y_test)
-    o = DictWriter(open("predictions.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
-    o.writeheader()
     baseline = {'dataName': dataName[dataindex] ,'classifier': 'baseline', 'percent': Bscore/float(BomniScore),'score': Bscore,'OmniScore': BomniScore, 'Type1-A/A/Good': BtypeNum[0], 'Type2-A/B/Bad': BtypeNum[1], 'Type3-A/B/Good': BtypeNum[2], 'Type4-A/A/Bad': BtypeNum[3]}
     o.writerow(baseline)
 
