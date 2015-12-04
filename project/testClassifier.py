@@ -8,14 +8,33 @@ from sklearn.cross_validation import train_test_split
 
 #--------------------------------------------------#
 #training
+#---------------------------------#
+#data1: combine 2014 and 2013
+#data = list(DictReader(open("pbp-2014.csv", 'r')))
+#data2014 = list(DictReader(open("pbp-2013.csv", 'r')))
+#data.extend(data2014)
+#---------------------------------#
+#data2: combine 2014, first 80% for train, 20% for test
 data = list(DictReader(open("pbp-2014.csv", 'r')))
-data2014 = list(DictReader(open("pbp-2013.csv", 'r')))
-data.extend(data2014)
+#---------------------------------#
 pbp2014 = NewPbpExtractor()
 pbp2014.buildFormationList(data)
 feature, target = pbp2014.extract4Classifier(data)
 
-X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.2, random_state=42)
+#X_train, X_test, y_train, y_test = train_test_split(feature, target, test_size=.2, random_state=42)
+
+dataLength = feature.shape[0]
+dataLength80 = round(dataLength * 0.8)
+#dataLength20 = dataLength - dataLength80
+#X_train = np.zeros((dataLength80, feature.shape[1]))
+#X_test = np.zeros((dataLength20, feature.shape[1]))
+#y_train = np.zeros(dataLength80)
+#y_test = np.zeros(dataLength20)
+X_train = feature[0:dataLength80,:]
+X_test = feature[(dataLength80+1):dataLength,:]
+y_train = target[0:dataLength80]
+y_test = target[(dataLength80+1):dataLength]
+
 
 #test
 #data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
