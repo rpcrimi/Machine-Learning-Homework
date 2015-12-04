@@ -41,7 +41,6 @@ y_test = target[(dataLength80+1):dataLength]
 #X_test, y_test = pbp2014.extract4Classifier(data2015)
 #--------------------------------------------------#
 
-
 #--------------------------------------------------#
 #BayesClassifier
 #clf = BayesClassifier()
@@ -70,6 +69,10 @@ y_pred = clf.recommendation(temp)
 #--------------------------------------------------#
 class2014 = classifierEvaluation()
 score, num, typeNum, omniScore = class2014.Score(y_test, y_pred)
+Bscore, Bnum, BtypeNum, BomniScore = class2014.Score(y_test, y_test)
 print("Number of a total %d points, Score %d, percent %f" % (len(y_test), score, score/float(omniScore)) )
 print("Number of a each type")
 print typeNum
+print("Baseline: Number of a total %d points, Score %d, percent %f" % (len(y_test), Bscore, Bscore/float(BomniScore)) )
+print("Baseline: Number of a each type")
+print BtypeNum

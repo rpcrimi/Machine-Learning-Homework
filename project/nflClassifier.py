@@ -42,6 +42,9 @@ class classifier():
             recommendation[i] = self.recommendationSingle(predict[i])
         return recommendation
 
+class baselineClassifier(classifier):
+    def predict(self, data, target):
+        return target
 class knClassifier(classifier):
     def __init__(self):
         from sklearn.neighbors import KNeighborsClassifier
