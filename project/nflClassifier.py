@@ -42,37 +42,42 @@ class classifier():
             recommendation[i] = self.recommendationSingle(predict[i])
         return recommendation
 
-class baselineClassifier(classifier):
-    def predict(self, data, target):
-        return target
 class knClassifier(classifier):
     def __init__(self):
+        self.name = "KNeighborsClassifier"
         from sklearn.neighbors import KNeighborsClassifier
         self.clf = KNeighborsClassifier(4)
 class svmClassifier(classifier):
     def __init__(self):
+        self.name = "svmClassifier, gamma=0.001, C=100.)"
         from sklearn import svm
         self.clf = svm.SVC(gamma=0.001, C=100.)
     def linear(self, C=0.025):
+        self.name = "svmClassifier, linear, C=%d" % (C)
         from sklearn import svm
         self.clf = svm.SVC(kernel="linear", C=C)
     def gamma(self, gamma=2, C=1):
+        self.name = "svmClassifier, gamma, C=%d" % (C)
         from sklearn import svm
         self.clf = svm.SVC(gamma=gamma, C=C)
 class BayesClassifier(classifier):
     def __init__(self):
+        self.name = "GaussianNB"
         from sklearn.naive_bayes import GaussianNB
         self.clf = GaussianNB()
 class dtClassifier(classifier):
     def __init__(self):
+        self.name = "DecisionTreeClassifier"
         from sklearn.tree import DecisionTreeClassifier
         self.clf = DecisionTreeClassifier(max_depth=5)
 class rfClassifier(classifier):
     def __init__(self):
+        self.name = "RandomForestClassifier"
         from sklearn.ensemble import RandomForestClassifier
         self.clf = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
 class adaBoostClassifier(classifier):
     def __init__(self):
+        self.name = "AdaBoostClassifier"
         from sklearn.ensemble import AdaBoostClassifier
         self.clf = AdaBoostClassifier()
 '''
