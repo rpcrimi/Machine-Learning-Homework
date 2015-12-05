@@ -90,7 +90,7 @@ class rfClassifier(classifier):
 class adaBoostClassifier(classifier):
     def __init__(self, method="dt", algorithm="SAMME.R"):
         from sklearn.ensemble import AdaBoostClassifier
-        self.name = "AdaBoostClassifier, method-%s, algorithm-%" % (method, algorithm)
+        self.name = "AdaBoostClassifier, method-%s, algorithm-%s" % (method, algorithm)
         if method == "dt":
             self.clf = AdaBoostClassifier(algorithm=algorithm)
         if method =="svm":
