@@ -18,8 +18,8 @@ from sklearn.cross_validation import train_test_split
 data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
 data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
 data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
-dataList = [data2013, data2014]
-dataName = ["2013","2014"]
+dataList = [data2015]
+dataName = ["2015"]
 #dataList = [data2015]
 #dataName = ["2015"]
 
