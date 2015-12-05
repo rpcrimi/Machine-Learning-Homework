@@ -60,6 +60,11 @@ for dataindex in range(len(dataList)):
     criterion = ["gini", "entropy"]
     algorithm = ["SAMME", "SAMME.R"]
     method = ["dt", "svm"]
+
+    algorithmForkn = ["ball_tree", "kd_tree", "brute", "auto"]
+    n_neighbors  = np.linspace(3, 8, num = 8-3+1)
+    metric = ["minkowski", "euclidean", "manhattan", "chebyshev", "wminkowski", "seuclidean", "mahalanobis"]
+    weights = ["uniform", "distance"]
     '''
     #DecisionTreeClassifier
     for a, b, c in product(max_depth, splitter, max_features):
@@ -79,6 +84,9 @@ for dataindex in range(len(dataList)):
 
     for a, b in product(method, algorithm):
         clf.append( adaBoostClassifier(method=a, algorithm=b) )
+
+    for a, b, c, d in product(algorithmForkn, n_neighbors, metric, weights):
+        clf.append( knClassifier(n_neighbors=b, algorithm=a, metric=c, weights=d) )
 
     '''
     clf = [
