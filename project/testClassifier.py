@@ -10,20 +10,12 @@ from sklearn.cross_validation import train_test_split
 
 #--------------------------------------------------#
 #training
-#---------------------------------#
-#data1: combine 2014 and 2013
-#data = list(DictReader(open("pbp-2014.csv", 'r')))
-#data2014 = list(DictReader(open("pbp-2013.csv", 'r')))
-#data.extend(data2014)
-#---------------------------------#
 #data2: combine 2014, first 80% for train, 20% for test
 data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
 data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
 data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
 dataList = [data2013, data2014, data2015]
 dataName = ["2013","2014","2015"]
-#dataList = [data2015]
-#dataName = ["2015"]
 
 o = DictWriter(open("output.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
 o.writeheader()
@@ -48,10 +40,6 @@ for dataindex in range(len(dataList)):
     baseline = {'dataName': dataName[dataindex] ,'classifier': 'baseline', 'percent': Bscore/float(BomniScore),'score': Bscore,'OmniScore': BomniScore, 'Type1-A/A/Good': BtypeNum[0], 'Type2-A/B/Bad': BtypeNum[1], 'Type3-A/B/Good': BtypeNum[2], 'Type4-A/A/Bad': BtypeNum[3]}
     o.writerow(baseline)
 
-    #svmClassifier
-    #clf = svmClassifier()
-    #clf.linear()
-    #clf.gamma()
     #--------------------------------------------------#
     clf = []
     max_depth = np.linspace(5, 13, num = 13-5+1)
@@ -65,6 +53,8 @@ for dataindex in range(len(dataList)):
     n_neighbors  = np.linspace(3, 8, num = 8-3+1)
     metric = ["minkowski", "euclidean", "manhattan", "chebyshev", "wminkowski", "seuclidean", "mahalanobis"]
     weights = ["uniform", "distance"]
+
+    
     '''
     #DecisionTreeClassifier
     for a, b, c in product(max_depth, splitter, max_features):
@@ -88,11 +78,6 @@ for dataindex in range(len(dataList)):
     for a, b, c, d in product(algorithmForkn, n_neighbors, metric, weights):
         clf.append( knClassifier(n_neighbors=b, algorithm=a, metric=c, weights=d) )
 
-    '''
-    clf = [
-    #knClassifier()
-    ]
-    '''
 
     for i in range(len(clf)):
         clf[i].classify(X_train, y_train, needWeight=False)
