@@ -65,11 +65,21 @@ class BayesClassifier(classifier):
         self.name = "GaussianNB"
         from sklearn.naive_bayes import GaussianNB
         self.clf = GaussianNB()
-class dtClassifier(classifier):
+class BernoulliNB(classifier):
     def __init__(self):
-        self.name = "DecisionTreeClassifier"
+        self.name = "BernoulliNB"
+        from sklearn.naive_bayes import BernoulliNB
+        self.clf = BernoulliNB()
+class MultinomialNB(classifier):
+    def __init__(self):
+        self.name = "MultinomialNB"
+        from sklearn.naive_bayes import MultinomialNB
+        self.clf = MultinomialNB()
+class dtClassifier(classifier):
+    def __init__(self, max_depth=5, splitter="best", random_state=0, max_features=None):
+        self.name = "DecisionTreeClassifier, max_depth %d, splitter %s, max_features %d" % (max_depth, splitter, max_features)
         from sklearn.tree import DecisionTreeClassifier
-        self.clf = DecisionTreeClassifier(max_depth=5)
+        self.clf = DecisionTreeClassifier(max_depth=max_depth, splitter=splitter, max_features=max_features)
 class rfClassifier(classifier):
     def __init__(self):
         self.name = "RandomForestClassifier"

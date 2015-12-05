@@ -1,4 +1,6 @@
 from csv import DictReader, DictWriter
+import numpy as np
+from itertools import product
 
 from extractor import NewPbpExtractor
 from nflEvaluation import classifierEvaluation
@@ -18,8 +20,8 @@ from sklearn.cross_validation import train_test_split
 data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
 data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
 data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
-dataList = [data2015]
-dataName = ["2015"]
+dataList = [data2013, data2014, data2015]
+dataName = ["2013","2014","2015"]
 #dataList = [data2015]
 #dataName = ["2015"]
 
@@ -51,7 +53,43 @@ for dataindex in range(len(dataList)):
     #clf.linear()
     #clf.gamma()
     #--------------------------------------------------#
-    clf = [dtClassifier(), rfClassifier(), adaBoostClassifier(), BayesClassifier(), knClassifier()]
+    clf = []
+    '''
+    #DecisionTreeClassifier
+    max_depth = np.linspace(5, 13, num = 13-5+1)
+    splitter = ["best", "random"]
+    max_features = np.linspace(7, 12, num = 12-7+1)
+    for a, b, c in product(max_depth, splitter, max_features):
+        clf.append( dtClassifier(max_depth=a, splitter=b, max_features=int(c)) )
+    '''
+    clf.append( BayesClassifier() )
+    clf.append( MultinomialNB() )
+    clf.append( BernoulliNB() )
+
+    '''
+    clf = [
+    dtClassifier(max_depth=5, splitter="best"),
+    dtClassifier(max_depth=6, splitter="best"),
+    dtClassifier(max_depth=7, splitter="best"),
+    dtClassifier(max_depth=8, splitter="best"),
+    dtClassifier(max_depth=9, splitter="best"),
+    dtClassifier(max_depth=10, splitter="best"),
+    dtClassifier(max_depth=11, splitter="best"),
+    dtClassifier(max_depth=12, splitter="best"),
+    dtClassifier(max_depth=5, splitter="random"),
+    dtClassifier(max_depth=6, splitter="random"),
+    dtClassifier(max_depth=7, splitter="random"),
+    dtClassifier(max_depth=8, splitter="random"),
+    dtClassifier(max_depth=9, splitter="random"),
+    dtClassifier(max_depth=10, splitter="random"),
+    dtClassifier(max_depth=11, splitter="random"),
+    dtClassifier(max_depth=12, splitter="random"),
+    #rfClassifier(),
+    #adaBoostClassifier(),
+    #BayesClassifier(),
+    #knClassifier()
+    ]
+    '''
 
     for i in range(len(clf)):
         clf[i].classify(X_train, y_train, needWeight=False)
