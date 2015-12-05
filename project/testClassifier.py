@@ -63,7 +63,6 @@ for dataindex in range(len(dataList)):
         clf.append( dtClassifier(max_depth=a, splitter=b, max_features=int(c)) )
     '''
     clf.append( BayesClassifier() )
-    clf.append( MultinomialNB() )
     clf.append( BernoulliNB() )
 
     '''
