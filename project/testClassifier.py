@@ -54,38 +54,34 @@ for dataindex in range(len(dataList)):
     #clf.gamma()
     #--------------------------------------------------#
     clf = []
-    '''
-    #DecisionTreeClassifier
     max_depth = np.linspace(5, 13, num = 13-5+1)
     splitter = ["best", "random"]
     max_features = np.linspace(7, 12, num = 12-7+1)
+    criterion = ["gini", "entropy"]
+    algorithm = ["SAMME", "SAMME.R"]
+    method = ["dt", "svm"]
+    '''
+    #DecisionTreeClassifier
     for a, b, c in product(max_depth, splitter, max_features):
         clf.append( dtClassifier(max_depth=a, splitter=b, max_features=int(c)) )
     '''
+
+    '''
     clf.append( BayesClassifier() )
     clf.append( BernoulliNB() )
+    '''
+
+    '''
+    clf.append(rfClassifier())
+    for a, b, c in product(max_depth, criterion, max_features):
+        clf.append( rfClassifier(max_depth=a, criterion=b, max_features=int(c)) )
+    '''
+
+    for a, b in product(method, algorithm):
+        clf.append( adaBoostClassifier(method=a, algorithm=b) )
 
     '''
     clf = [
-    dtClassifier(max_depth=5, splitter="best"),
-    dtClassifier(max_depth=6, splitter="best"),
-    dtClassifier(max_depth=7, splitter="best"),
-    dtClassifier(max_depth=8, splitter="best"),
-    dtClassifier(max_depth=9, splitter="best"),
-    dtClassifier(max_depth=10, splitter="best"),
-    dtClassifier(max_depth=11, splitter="best"),
-    dtClassifier(max_depth=12, splitter="best"),
-    dtClassifier(max_depth=5, splitter="random"),
-    dtClassifier(max_depth=6, splitter="random"),
-    dtClassifier(max_depth=7, splitter="random"),
-    dtClassifier(max_depth=8, splitter="random"),
-    dtClassifier(max_depth=9, splitter="random"),
-    dtClassifier(max_depth=10, splitter="random"),
-    dtClassifier(max_depth=11, splitter="random"),
-    dtClassifier(max_depth=12, splitter="random"),
-    #rfClassifier(),
-    #adaBoostClassifier(),
-    #BayesClassifier(),
     #knClassifier()
     ]
     '''
