@@ -43,10 +43,10 @@ class classifier():
         return recommendation
 
 class knClassifier(classifier):#done
-    def __init__(self, n_neighbors=5, algorithm="auto", metric="minkowski", weights="uniform"):
-        self.name = "KNeighborsClassifier, n_neighbors %d, algorithm=%s, metric=%s, weights=%s" % (n_neighbors, algorithm, metric, weights )
+    def __init__(self, n_neighbors=5, algorithm="auto", metric="minkowski"):
+        self.name = "KNeighborsClassifier, n_neighbors %d, algorithm=%s, metric=%s" % (n_neighbors, algorithm, metric )
         from sklearn.neighbors import KNeighborsClassifier
-        self.clf = KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=algorithm, metric=metric, weights=weights)
+        self.clf = KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=algorithm, metric=metric)
 class svmClassifier(classifier):
     def __init__(self, C=1.0, kernel="rbf"):
         from sklearn.svm  import SVC

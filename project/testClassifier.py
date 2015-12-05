@@ -49,27 +49,27 @@ for dataindex in range(len(dataList)):
     algorithm = ["SAMME", "SAMME.R"]
     method = ["dt", "svm"]
 
-    algorithmForkn = ["ball_tree", "kd_tree", "brute", "auto"]
+    algorithmForkn = ["ball_tree", "brute", "auto"]
     n_neighbors  = np.linspace(3, 8, num = 8-3+1)
-    metric = ["minkowski", "euclidean", "manhattan", "chebyshev", "wminkowski", "seuclidean", "mahalanobis"]
-    weights = ["uniform", "distance"]
+    metric = ["minkowski", "euclidean", "manhattan", "chebyshev"]
 
     C = [.0001, .001, .01, .1, 1, 10, 100, 1000]
     kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
 
+    '''
     #DecisionTreeClassifier
     for a, b, c in product(max_depth, splitter, max_features):
         clf.append( dtClassifier(max_depth=a, splitter=b, max_features=int(c)) )
 
-    clf.append( BayesClassifier() )
-    clf.append( BernoulliNB() )
-
     clf.append(rfClassifier())
     for a, b, c in product(max_depth, criterion, max_features):
         clf.append( rfClassifier(max_depth=a, criterion=b, max_features=int(c)) )
+    '''
 
-    for a, b, c, d in product(algorithmForkn, n_neighbors, metric, weights):
-        clf.append( knClassifier(n_neighbors=b, algorithm=a, metric=c, weights=d) )
+    clf.append( BayesClassifier() )
+    clf.append( BernoulliNB() )
+    for a, b, c in product(algorithmForkn, n_neighbors, metric):
+        clf.append( knClassifier(n_neighbors=b, algorithm=a, metric=c) )
 
     for i in range(len(clf)):
         clf[i].classify(X_train, y_train, needWeight=False)
