@@ -48,18 +48,10 @@ class knClassifier(classifier):#done
         from sklearn.neighbors import KNeighborsClassifier
         self.clf = KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=algorithm, metric=metric, weights=weights)
 class svmClassifier(classifier):
-    def __init__(self):
-        self.name = "svmClassifier, gamma=0.001, C=100.)"
+    def __init__(self, C=1.0, kernel="rbf"):
         from sklearn.svm  import SVC
-        self.clf = SVC(gamma=0.001, C=100.)
-    def linear(self, C=0.025):
-        self.name = "svmClassifier, linear, C=%d" % (C)
-        from sklearn import svm
-        self.clf = SVC(kernel="linear", C=C)
-    def gamma(self, gamma=2, C=1):
-        self.name = "svmClassifier, gamma, C=%d" % (C)
-        from sklearn import svm
-        self.clf = SVC(gamma=gamma, C=C)
+        self.name = "svmClassifier, C=%d, kernel: %s)" %(C, kernel)
+        self.clf = SVC(C=C, kernel=kernel)
 class BayesClassifier(classifier):#done
     def __init__(self):
         self.name = "GaussianNB"

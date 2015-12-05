@@ -54,7 +54,8 @@ for dataindex in range(len(dataList)):
     metric = ["minkowski", "euclidean", "manhattan", "chebyshev", "wminkowski", "seuclidean", "mahalanobis"]
     weights = ["uniform", "distance"]
 
-    
+    C = [.0001, .001, .01, .1, 1, 10, 100, 1000]
+    kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
     '''
     #DecisionTreeClassifier
     for a, b, c in product(max_depth, splitter, max_features):
@@ -75,9 +76,14 @@ for dataindex in range(len(dataList)):
     for a, b in product(method, algorithm):
         clf.append( adaBoostClassifier(method=a, algorithm=b) )
 
+    '''
     for a, b, c, d in product(algorithmForkn, n_neighbors, metric, weights):
         clf.append( knClassifier(n_neighbors=b, algorithm=a, metric=c, weights=d) )
+    '''
 
+
+    for a,b in product(C, kernel):
+        clf.append( svmClassifier(C=a, kernel=b) )
 
     for i in range(len(clf)):
         clf[i].classify(X_train, y_train, needWeight=False)
