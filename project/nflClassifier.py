@@ -42,44 +42,52 @@ class classifier():
             recommendation[i] = self.recommendationSingle(predict[i])
         return recommendation
 
-class knClassifier(classifier):
-    def __init__(self):
-        self.name = "KNeighborsClassifier"
+class knClassifier(classifier):#done
+    def __init__(self, n_neighbors=5, algorithm="auto", metric="minkowski"):
+        self.name = "KNeighborsClassifier, n_neighbors %d, algorithm=%s, metric=%s" % (n_neighbors, algorithm, metric )
         from sklearn.neighbors import KNeighborsClassifier
-        self.clf = KNeighborsClassifier(4)
+        self.clf = KNeighborsClassifier(n_neighbors=n_neighbors, algorithm=algorithm, metric=metric)
 class svmClassifier(classifier):
-    def __init__(self):
-        self.name = "svmClassifier, gamma=0.001, C=100.)"
-        from sklearn import svm
-        self.clf = svm.SVC(gamma=0.001, C=100.)
-    def linear(self, C=0.025):
-        self.name = "svmClassifier, linear, C=%d" % (C)
-        from sklearn import svm
-        self.clf = svm.SVC(kernel="linear", C=C)
-    def gamma(self, gamma=2, C=1):
-        self.name = "svmClassifier, gamma, C=%d" % (C)
-        from sklearn import svm
-        self.clf = svm.SVC(gamma=gamma, C=C)
-class BayesClassifier(classifier):
+    def __init__(self, C=1.0, kernel="rbf"):
+        from sklearn.svm  import SVC
+        self.name = "svmClassifier, C=%d, kernel: %s)" %(C, kernel)
+        self.clf = SVC(C=C, kernel=kernel)
+class BayesClassifier(classifier):#done
     def __init__(self):
         self.name = "GaussianNB"
         from sklearn.naive_bayes import GaussianNB
         self.clf = GaussianNB()
-class dtClassifier(classifier):
+class BernoulliNB(classifier):#done
     def __init__(self):
-        self.name = "DecisionTreeClassifier"
+        self.name = "BernoulliNB"
+        from sklearn.naive_bayes import BernoulliNB
+        self.clf = BernoulliNB()
+'''
+class MultinomialNB(classifier):
+    def __init__(self):
+        self.name = "MultinomialNB"
+        from sklearn.naive_bayes import MultinomialNB
+        self.clf = MultinomialNB()
+'''
+class dtClassifier(classifier):#done
+    def __init__(self, max_depth=5, splitter="best", random_state=0, max_features=None):
+        self.name = "DecisionTreeClassifier, max_depth %s, splitter %s, max_features %s" % (str(max_depth), splitter, str(max_features))
         from sklearn.tree import DecisionTreeClassifier
-        self.clf = DecisionTreeClassifier(max_depth=5)
-class rfClassifier(classifier):
-    def __init__(self):
-        self.name = "RandomForestClassifier"
+        self.clf = DecisionTreeClassifier(max_depth=max_depth, splitter=splitter, max_features=max_features)
+class rfClassifier(classifier):#done
+    def __init__(self, max_depth=None, criterion="gini", max_features="auto"):
+        self.name = "RandomForestClassifier, max_depth %s, criterion %s, max_features %s" % (str(max_depth), criterion, str(max_features))
         from sklearn.ensemble import RandomForestClassifier
-        self.clf = RandomForestClassifier(max_depth=5, n_estimators=10, max_features=1)
-class adaBoostClassifier(classifier):
-    def __init__(self):
-        self.name = "AdaBoostClassifier"
+        self.clf = RandomForestClassifier(max_depth=max_depth, criterion=criterion, max_features=max_features)
+class adaBoostClassifier(classifier):#done
+    def __init__(self, method="dt", algorithm="SAMME.R"):
         from sklearn.ensemble import AdaBoostClassifier
-        self.clf = AdaBoostClassifier()
+        self.name = "AdaBoostClassifier, method-%s, algorithm-%s" % (method, algorithm)
+        if method == "dt":
+            self.clf = AdaBoostClassifier(algorithm=algorithm)
+        if method =="svm":
+            from sklearn.svm import SVC
+            self.clf = AdaBoostClassifier(SVC(probability=True,kernel='linear'), algorithm=algorithm)
 '''
 class ldClassifier(classifier):
     def __init__(self):
