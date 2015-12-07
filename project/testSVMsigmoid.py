@@ -17,7 +17,7 @@ data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
 dataList = [data2013, data2014, data2015]
 dataName = ["2013","2014","2015"]
 
-o = DictWriter(open("SVMoutput.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
+o = DictWriter(open("SVMoutput-sigmoid.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
 o.writeheader()
 
 #---------------------------------#
@@ -43,9 +43,11 @@ for dataindex in range(len(dataList)):
     #--------------------------------------------------#
     clf = []
 
-    C = [.0001, .001, .01, .1, 1, 10, 100, 1000]
-    kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
+    C = [0.1, 1, 10]
+    #kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
+    kernel = ["sigmoid"]
 
+    ''
     for a,b in product(C, kernel):
         clf.append( svmClassifier(C=a, kernel=b) )
 
