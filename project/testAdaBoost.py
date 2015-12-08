@@ -44,7 +44,7 @@ for dataindex in range(len(dataList)):
     clf = []
 
     algorithm = ["SAMME", "SAMME.R"]
-    method = ["dt", "svm"]
+    method = ["dt"]
 
     for a, b in product(method, algorithm):
         clf.append( adaBoostClassifier(method=a, algorithm=b) )

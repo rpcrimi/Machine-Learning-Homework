@@ -17,7 +17,7 @@ data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
 dataList = [data2013, data2014, data2015]
 dataName = ["2013","2014","2015"]
 
-o = DictWriter(open("output.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
+o = DictWriter(open("rfClassifier.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
 o.writeheader()
 
 #---------------------------------#
@@ -56,18 +56,9 @@ for dataindex in range(len(dataList)):
     C = [.0001, .001, .01, .1, 1, 10, 100, 1000]
     kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
 
-    '''
-    #DecisionTreeClassifier
-    for a, b, c in product(max_depth, splitter, max_features):
-        clf.append( dtClassifier(max_depth=a, splitter=b, max_features=int(c)) )
-
     clf.append(rfClassifier())
     for a, b, c in product(max_depth, criterion, max_features):
         clf.append( rfClassifier(max_depth=a, criterion=b, max_features=int(c)) )
-    '''
-
-    clf.append( BayesClassifier() )
-    clf.append( BernoulliNB() )
 
 
     for i in range(len(clf)):
