@@ -56,15 +56,6 @@ for dataindex in range(len(dataList)):
     C = [.0001, .001, .01, .1, 1, 10, 100, 1000]
     kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
 
-    '''
-    #DecisionTreeClassifier
-    for a, b, c in product(max_depth, splitter, max_features):
-        clf.append( dtClassifier(max_depth=a, splitter=b, max_features=int(c)) )
-
-    clf.append(rfClassifier())
-    for a, b, c in product(max_depth, criterion, max_features):
-        clf.append( rfClassifier(max_depth=a, criterion=b, max_features=int(c)) )
-    '''
 
     clf.append( BayesClassifier() )
     clf.append( BernoulliNB() )
