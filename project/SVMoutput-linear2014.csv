@@ -1,0 +1,3 @@
+dataName,classifier,percent,score,OmniScore,Type1-A/A/Good,Type2-A/B/Bad,Type3-A/B/Good,Type4-A/A/Bad
+2014,baseline,0.0628374677204789,803.0,12779,2634.0,0.0,0.0,3610.0
+2014,"svmClassifier, C=1, kernel: linear)",0.49855231238751074,6371.0,12779,1909.0,2838.0,725.0,772.0
