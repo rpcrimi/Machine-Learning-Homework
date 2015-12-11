@@ -11,13 +11,11 @@ from sklearn.cross_validation import train_test_split
 #--------------------------------------------------#
 #training
 #data2: combine 2014, first 80% for train, 20% for test
-data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
-data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
 data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
-dataList = [data2013, data2014, data2015]
-dataName = ["2013","2014","2015"]
+dataList = [data2015]
+dataName = ["2015"]
 
-o = DictWriter(open("Bayes.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
+o = DictWriter(open("SVMoutput-linear2015.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
 o.writeheader()
 
 #---------------------------------#
@@ -42,24 +40,14 @@ for dataindex in range(len(dataList)):
 
     #--------------------------------------------------#
     clf = []
-    max_depth = np.linspace(5, 13, num = 13-5+1)
-    splitter = ["best", "random"]
-    max_features = np.linspace(7, 16, num = 16-7+1)
-    criterion = ["gini", "entropy"]
-    algorithm = ["SAMME", "SAMME.R"]
-    method = ["dt", "svm"]
 
-    algorithmForkn = ["ball_tree", "brute", "auto"]
-    n_neighbors  = np.linspace(3, 8, num = 8-3+1)
-    metric = ["minkowski", "euclidean", "manhattan", "chebyshev"]
+    C = [1]
+    #kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
+    kernel = ["linear"]
 
-    C = [.0001, .001, .01, .1, 1, 10, 100, 1000]
-    kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
-
-
-    clf.append( BayesClassifier() )
-    clf.append( BernoulliNB() )
-
+    ''
+    for a,b in product(C, kernel):
+        clf.append( svmClassifier(C=a, kernel=b) )
 
     for i in range(len(clf)):
         clf[i].classify(X_train, y_train, needWeight=False)

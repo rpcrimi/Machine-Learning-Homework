@@ -12,12 +12,10 @@ from sklearn.cross_validation import train_test_split
 #training
 #data2: combine 2014, first 80% for train, 20% for test
 data2013 = list(DictReader(open("pbp-2013.csv", 'r')))
-data2014 = list(DictReader(open("pbp-2014.csv", 'r')))
-data2015 = list(DictReader(open("pbp-2015.csv", 'r')))
-dataList = [data2013, data2014, data2015]
-dataName = ["2013","2014","2015"]
+dataList = [data2013]
+dataName = ["2013"]
 
-o = DictWriter(open("SVMoutput-linear.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
+o = DictWriter(open("SVMoutput-linear2013.csv", 'w'), ["dataName", "classifier", "percent", "score", "OmniScore", "Type1-A/A/Good","Type2-A/B/Bad",  "Type3-A/B/Good", "Type4-A/A/Bad"])
 o.writeheader()
 
 #---------------------------------#
@@ -43,7 +41,7 @@ for dataindex in range(len(dataList)):
     #--------------------------------------------------#
     clf = []
 
-    C = [0.1, 1, 10]
+    C = [1]
     #kernel = ["linear", "poly", "rbf", "sigmoid", "precomputed"]
     kernel = ["linear"]
 

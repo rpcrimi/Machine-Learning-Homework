@@ -56,6 +56,13 @@ class Extractor():
         for play in data:
             if play["Formation"] not in self.formationlist:
                 self.formationlist.append(play["Formation"])
+    def buildTeamList(self, data):
+        self.teamlist = []
+        for play in data:
+            if play["OffenseTeam"] not in self.formationlist:
+                self.teamlist.append(play["OffenseTeam"])
+            if play["DefenseTeam"] not in self.formationlist:
+                self.teamlist.append(play["DefenseTeam"])
     #def extract(self, data):
     #    return data
 
@@ -79,7 +86,9 @@ class PbpExtractor(Extractor):
 
 class NewPbpExtractor(Extractor):
     def extract(self, data):
-        featureNum = 12
+        self.buildPlayTypeList(data)
+        self.buildTeamList(data)
+        featureNum = 16
         pType = np.zeros(len(data))
         pScore = np.zeros(len(data))
         pResult = np.zeros(len(data))
@@ -89,11 +98,13 @@ class NewPbpExtractor(Extractor):
         for play in data:
             PlayType, PlayResult = seperateVector(play["Y"])
             Formation = classifyType(play["Formation"], self.formationlist)
+            OffenseTeam = classifyType(play["OffenseTeam"], self.teamlist)
+            DefenseTeam = classifyType(play["DefenseTeam"], self.teamlist)
             Time  = 15* 60 - (int(play["Minute"]) * 60  + int(play["Second"]) )
             YardLineDirection = numericalYardLineDirection(play["YardLineDirection"])
             HomeTeambeOffenseTeam, OffenseScore, DefScore = isHomeTeambeOffenseTeam(play["HomeTeam"], play["OffenseTeam"], play["CurrentScore"])
             Yards = yards(play["Yards"])
-            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation, OffenseScore, DefScore ])
+            feature[i,:] = np.matrix([int(play["Quarter"]), Time, int(play["Down"]), int(play["ToGo"]), int(play["YardLine"]), int(play["SeriesFirstDown"]), Yards, YardLineDirection, HomeTeambeOffenseTeam, Formation, OffenseScore, DefScore, OffenseTeam, DefenseTeam, int(play["HomeTeamFinalScore"]), int(play["VisitingTeamFinalScore"])  ])
 
             pType[i] = PlayType
             pResult[i] = PlayResult
