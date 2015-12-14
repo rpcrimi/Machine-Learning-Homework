@@ -87,7 +87,7 @@ class adaBoostClassifier(classifier):#done
             self.clf = AdaBoostClassifier(algorithm=algorithm)
         if method =="svm":
             from sklearn.svm import SVC
-            self.clf = AdaBoostClassifier(SVC(probability=True,kernel='linear'), algorithm=algorithm)
+            self.clf = AdaBoostClassifier(SVC(probability=True,kernel='linear'), algorithm=algorithm, n_estimators=10)
 '''
 class ldClassifier(classifier):
     def __init__(self):
