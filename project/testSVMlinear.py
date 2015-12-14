@@ -53,7 +53,7 @@ for dataindex in range(len(dataList)):
         clf[i].classify(X_train, y_train, needWeight=False)
         temp = clf[i].predict(X_test)
         y_pred = clf[i].recommendation(temp)
-
+2
         score, num, typeNum, omniScore = class2014.Score(y_test, y_pred)
 
         clfCVS = {'dataName': dataName[dataindex], 'classifier': clf[i].name, 'percent': score/float(omniScore),'score': score,'OmniScore': omniScore, 'Type1-A/A/Good': typeNum[0], 'Type2-A/B/Bad': typeNum[1], 'Type3-A/B/Good': typeNum[2], 'Type4-A/A/Bad': typeNum[3]}
