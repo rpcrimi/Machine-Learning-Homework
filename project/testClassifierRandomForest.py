@@ -7,7 +7,7 @@ from nflEvaluation import classifierEvaluation
 from nflClassifier import *
 from sklearn.cross_validation import train_test_split
 
-mc = 50
+mc = 10
 #--------------------------------------------------#
 #training
 #data2: combine 2014, first 80% for train, 20% for test
